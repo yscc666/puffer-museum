@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="creative-medium" content="interactive-prototype">
+  <title>刺豚数字博物馆 | Diodon Digital Museum</title>
+  
+  <!-- 字体 -->
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:ital,wght@0,400;0,600;1,400&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+  
+  <!-- 预加载脚本 -->
+  <link rel="preload" as="script" href="assets/js/three.min.js">
+</head>
+<body>
+  <div class="page-container">
+    <!-- Hero 区域 -->
+    <section class="hero">
+      <div class="hero-bg-image" style="background-image: url('assets/images/hero.jpg');"></div>
+      <div class="hero-overlay"></div>
+      
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="hero-kicker">Digital Museum · 数字博物馆</span>
+          <h1 class="hero-title">
+            潜入深海，<br>
+            遇见<em>刺豚</em>的世界
+          </h1>
+          <p class="hero-subtitle">
+            以密斑刺鲀为旗舰物种，汇集刺鲀科与鲀科代表性物种的数字标本、科普百科与生信数据。外层科普易读，内层科研严谨——一座属于刺豚的虚拟博物馆。
+          </p>
+          <div class="hero-actions">
+            <a href="specimen.html" class="btn btn-primary">
+              进入3D标本馆
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="species.html" class="btn btn-outline">浏览物种百科</a>
+          </div>
+        </div>
+        
+        <div class="hero-3d-wrap">
+          <canvas id="hero3d" class="hero-3d-canvas"></canvas>
+          <div class="hero-3d-caption">
+            <div>
+              <div class="hero-3d-scientific">Diodon hystrix</div>
+              <div style="font-size: 0.75rem; opacity: 0.7;">密斑刺鲀 · 旗舰物种 · 3D 交互模型</div>
+            </div>
+            <div class="hero-3d-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3l6 6-6 6"/>
+                <path d="M9 21l-6-6 6-6"/>
+                <path d="M21 9v6M3 15v-6"/>
+              </svg>
+              拖拽旋转 · 滚轮缩放
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      ${MuseumUI_waveDivider()}
+    </section>
+
+    <!-- 展区导航 -->
+    <section class="section" style="padding-top: 4rem;">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker">Exhibition Halls</span>
+          <h2 class="section-title">四大展区，走进刺豚</h2>
+          <p class="section-desc">从科普阅读到科研数据，从宏观形态到微观基因——选择你的入口，以你的方式探索刺豚世界。</p>
+        </div>
+        
+        <div class="exhibit-grid">
+          <a href="specimen.html" class="exhibit-card">
+            <div class="exhibit-card-image">
+              <img src="assets/images/hystrix.jpg" alt="3D标本馆">
+              <div class="exhibit-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                  <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+              </div>
+            </div>
+            <div class="exhibit-card-body">
+              <span class="exhibit-card-label">Hall 01</span>
+              <h3 class="exhibit-card-title">3D 标本馆</h3>
+              <p class="exhibit-card-desc">每一个物种都以可旋转、可缩放的3D模型呈现。鼠标悬停自动旋转，拖拽细察每一根棘刺的细节。</p>
+              <span class="exhibit-card-link">
+                进入展厅
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+          
+          <a href="species.html" class="exhibit-card">
+            <div class="exhibit-card-image">
+              <img src="assets/images/holocanthus.jpg" alt="物种百科">
+              <div class="exhibit-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="exhibit-card-body">
+              <span class="exhibit-card-label">Hall 02</span>
+              <h3 class="exhibit-card-title">物种百科</h3>
+              <p class="exhibit-card-desc">7种代表性刺豚与河豚的完整图鉴：分类地位、形态特征、地理分布、生活习性、毒性与保护状态。</p>
+              <span class="exhibit-card-link">
+                浏览图鉴
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+          
+          <a href="diodondb.html" class="exhibit-card">
+            <div class="exhibit-card-image">
+              <img src="assets/images/rubripes.jpg" alt="DiodonDB">
+              <div class="exhibit-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+              </div>
+            </div>
+            <div class="exhibit-card-body">
+              <span class="exhibit-card-label" style="color: #d4a017;">Research</span>
+              <h3 class="exhibit-card-title">DiodonDB 生信数据</h3>
+              <p class="exhibit-card-desc">刺鲀科物种的分子生物学数据中心：基因组、转录组、线粒体 CO1 条形码等科研数据入口。</p>
+              <span class="exhibit-card-link">
+                进入数据库
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+          
+          <a href="about.html" class="exhibit-card">
+            <div class="exhibit-card-image">
+              <img src="assets/images/hero.jpg" alt="关于">
+              <div class="exhibit-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+              </div>
+            </div>
+            <div class="exhibit-card-body">
+              <span class="exhibit-card-label">About</span>
+              <h3 class="exhibit-card-title">关于博物馆</h3>
+              <p class="exhibit-card-desc">了解本馆的创办使命、实体标本来源与数字化流程，以及数据来源与学术参考资料。</p>
+              <span class="exhibit-card-link">
+                了解更多
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 旗舰物种介绍 -->
+    <section class="section" style="background: #fff;">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker">Flagship Species</span>
+          <h2 class="section-title">旗舰物种 · 密斑刺鲀</h2>
+          <p class="section-desc">本馆以密斑刺鲀（<em style="font-family: var(--font-sci); color: var(--sea-blue);">Diodon hystrix</em>）为旗舰物种。它是刺鲀科中分布最广、体型最大的代表之一，也是海洋珊瑚礁生态中最具辨识度的鱼类之一。</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+          <div style="position: relative;">
+            <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 12px 40px rgba(10,37,64,0.2);">
+              <img src="assets/images/hystrix.jpg" alt="密斑刺鲀" style="width:100%; height: auto; display: block;">
+            </div>
+            <div style="position: absolute; bottom: -1rem; right: -1rem; background: var(--label-paper); padding: 1rem 1.5rem; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid var(--sand);">
+              <div style="font-family: var(--font-sci); font-style: italic; color: var(--sea-blue); font-size: 1.1rem;">Diodon hystrix</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Linnaeus, 1758</div>
+            </div>
+          </div>
+          
+          <div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+              <div style="padding: 1.2rem; background: var(--sand-light); border-radius: 6px;">
+                <div style="font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--deep-ocean);">91 <span style="font-size: 1rem; color: var(--text-muted);">cm</span></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">最大体长记录</div>
+              </div>
+              <div style="padding: 1.2rem; background: var(--sand-light); border-radius: 6px;">
+                <div style="font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--deep-ocean);">2.8 <span style="font-size: 1rem; color: var(--text-muted);">kg</span></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">最大体重记录</div>
+              </div>
+              <div style="padding: 1.2rem; background: var(--sand-light); border-radius: 6px;">
+                <div style="font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--deep-ocean);">2-50 <span style="font-size: 1rem; color: var(--text-muted);">m</span></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">栖息深度范围</div>
+              </div>
+              <div style="padding: 1.2rem; background: var(--sand-light); border-radius: 6px;">
+                <div style="font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--deep-ocean);">IUCN LC</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">无危 · 保护等级</div>
+              </div>
+            </div>
+            
+            <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: var(--deep-ocean); margin-bottom: 0.8rem;">学名含义</h3>
+            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+              属名 <em style="font-family: var(--font-sci); color: var(--sea-blue);">Diodon</em> 源自希腊语 "di"（二）+ "odous"（齿），指其上下颌各具一块愈合的喙状齿板；种名 <em style="font-family: var(--font-sci); color: var(--sea-blue);">hystrix</em> 意为"豪猪"，形象地描述了它全身布满长棘的特征。
+            </p>
+            
+            <a href="species-detail.html?id=hystrix" class="btn btn-primary" style="background: var(--sea-blue); border-color: var(--sea-blue); color: #fff;">
+              查看完整物种档案
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 科普速览 -->
+    <section class="comparison-section section">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker">Science Snapshots</span>
+          <h2 class="section-title">六个关键词，读懂刺豚</h2>
+          <p class="section-desc">从分类学到毒理学，快速建立你对刺豚与河豚的认知框架。</p>
+        </div>
+        
+        <div id="science-topics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <!-- JS填充 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 实体标本预告 -->
+    <section class="section" style="background: #fff;">
+      <div class="section-inner" style="text-align: center;">
+        <div style="display: inline-block; padding: 0.4rem 1rem; background: rgba(212, 160, 23, 0.15); color: var(--amber); border-radius: 3px; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; margin-bottom: 1.5rem;">
+          实体标本 · Specimens
+        </div>
+        <h2 class="section-title" style="margin-bottom: 1rem;">你的实体标本，正在数字化</h2>
+        <p class="section-desc" style="margin-bottom: 2rem;">
+          本馆为私人收藏的刺豚实体标本预留了专属展位。当前展区以程序化3D模型呈现，后续将替换为高精度扫描模型，
+          让每一根棘刺、每一处斑纹都忠实于实物。
+        </p>
+        <a href="specimen.html#real-specimens" class="btn btn-primary" style="background: var(--amber); border-color: var(--amber); color: var(--deep-ocean);">
+          查看实体标本展位
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- 脚本 -->
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script src="assets/js/pufferfish3d.js"></script>
+  
+  <script>
+    // 渲染导航和页脚
+    MuseumUI.renderNavbar('home');
+    MuseumUI.renderFooter();
+    
+    // 波浪分隔（函数式，避免依赖问题）
+    function MuseumUI_waveDivider() {
+      return `<div class="wave-divider">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+          <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#f8f4e8"/>
+        </svg>
+      </div>`;
+    }
+    
+    // 初始化3D
+    window.addEventListener('load', () => {
+      const canvas = document.getElementById('hero3d');
+      if (canvas && window.Pufferfish3D) {
+        try {
+          window.hero3d = Pufferfish3D.createScene(canvas.parentElement, {
+            species: 'hystrix',
+            autoRotate: true,
+            rotateSpeed: 0.004,
+            interactive: true,
+          });
+        } catch(e) {
+          console.warn('3D init skipped:', e.message);
+        }
+      }
+      
+      // 渲染科普主题
+      renderScienceTopics();
+    });
+    
+    function renderScienceTopics() {
+      const container = document.getElementById('science-topics');
+      if (!container || !window.SCIENCE_TOPICS) return;
+      
+      container.innerHTML = SCIENCE_TOPICS.map((topic, i) => `
+        <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 12px rgba(10,37,64,0.06); border-left: 3px solid var(--teal);">
+          <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
+            <div style="width: 32px; height: 32px; background: rgba(26,188,156,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--teal); font-family: var(--font-mono); font-weight: 600; font-size: 0.85rem;">
+              ${String(i + 1).padStart(2, '0')}
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--deep-ocean); margin: 0;">${topic.title}</h3>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; margin: 0;">${topic.content}</p>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

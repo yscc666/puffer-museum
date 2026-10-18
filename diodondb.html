@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="creative-medium" content="interactive-prototype">
+  <title>DiodonDB 生信数据 | 刺豚数字博物馆</title>
+  
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="diodondb-page">
+  <div class="page-container">
+    <div class="page-header">
+      <span class="db-badge">RESEARCH DATABASE</span>
+      <h1>DiodonDB</h1>
+      <p>刺鲀科与鲀科物种基因组学数据库 —— 分子生物学、基因组、转录组、线粒体条形码数据中心。</p>
+      <div class="page-header-ornament">
+        <span style="font-family: var(--font-mono); font-style: normal; color: var(--turquoise); font-size: 0.95rem;">
+          Diodontidae & Tetraodontidae Genomics Database
+        </span>
+      </div>
+    </div>
+    
+    <div class="db-content">
+      <!-- 数据概览 -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem;">
+        <div style="background: #112240; border: 1px solid #1d3557; border-radius: 6px; padding: 1.5rem; text-align: center;">
+          <div style="font-family: var(--font-mono); font-size: 2rem; font-weight: 600; color: var(--turquoise);">7</div>
+          <div style="font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem;">收录物种</div>
+        </div>
+        <div style="background: #112240; border: 1px solid #1d3557; border-radius: 6px; padding: 1.5rem; text-align: center;">
+          <div style="font-family: var(--font-mono); font-size: 2rem; font-weight: 600; color: var(--toxic-green, #8ac926);">2</div>
+          <div style="font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem;">全基因组组装</div>
+        </div>
+        <div style="background: #112240; border: 1px solid #1d3557; border-radius: 6px; padding: 1.5rem; text-align: center;">
+          <div style="font-family: var(--font-mono); font-size: 2rem; font-weight: 600; color: var(--amber-light);">7</div>
+          <div style="font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem;">CO1 条形码</div>
+        </div>
+        <div style="background: #112240; border: 1px solid #1d3557; border-radius: 6px; padding: 1.5rem; text-align: center;">
+          <div style="font-family: var(--font-mono); font-size: 2rem; font-weight: 600; color: #8ac926;">3</div>
+          <div style="font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem;">线粒体基因组</div>
+        </div>
+      </div>
+      
+      <!-- 数据类别卡片 -->
+      <div class="db-grid">
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 0 0-7.07 17.07L12 22l7.07-2.93A10 10 0 0 0 12 2z"/>
+                <path d="M12 6v12M8 8l4 4 4-4M8 16l4-4 4 4"/>
+              </svg>
+            </div>
+            <h3>全基因组</h3>
+          </div>
+          <p class="db-card-desc">
+            染色体水平基因组组装数据，含注释信息、重复序列分析、基因结构预测等完整基因组学资源。
+          </p>
+          <div class="db-card-meta">
+            <span>2 个物种</span>
+            <span>GenBank</span>
+          </div>
+        </div>
+        
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="16" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <h3>转录组</h3>
+          </div>
+          <p class="db-card-desc">
+            多组织转录组测序数据，基因表达谱、差异表达分析、组织特异性基因鉴定等转录组学资源。
+          </p>
+          <div class="db-card-meta">
+            <span>3 个物种</span>
+            <span>RNA-seq</span>
+          </div>
+        </div>
+        
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+            </div>
+            <h3>线粒体基因组</h3>
+          </div>
+          <p class="db-card-desc">
+            线粒体 DNA 完整序列，含 13 个蛋白编码基因、22 个 tRNA、2 个 rRNA。用于系统发育与种群遗传学研究。
+          </p>
+          <div class="db-card-meta">
+            <span>4 个物种</span>
+            <span>mtDNA</span>
+          </div>
+        </div>
+        
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 0 0-7.07 17.07L12 22l7.07-2.93A10 10 0 0 0 12 2z"/>
+                <path d="M12 12m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/>
+              </svg>
+            </div>
+            <h3>CO1 条形码</h3>
+          </div>
+          <p class="db-card-desc">
+            细胞色素 c 氧化酶亚基 I（CO1）基因序列，DNA 条形码标准标记，用于物种鉴定与系统学研究。
+          </p>
+          <div class="db-card-meta">
+            <span>7 个物种</span>
+            <span>DNA Barcode</span>
+          </div>
+        </div>
+        
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+              </svg>
+            </div>
+            <h3>形态测量数据</h3>
+          </div>
+          <p class="db-card-desc">
+            馆藏标本的形态测量数据集，含体长、体重、棘长、鳍条数等可数与可量性状，支持比较形态学研究。
+          </p>
+          <div class="db-card-meta">
+            <span>7 个物种</span>
+            <span>Morphometrics</span>
+          </div>
+        </div>
+        
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"/>
+              </svg>
+            </div>
+            <h3>TTX 合成通路</h3>
+          </div>
+          <p class="db-card-desc">
+            河豚毒素合成与积累相关基因的比较基因组学分析，探索毒素耐受与富集的分子机制。
+          </p>
+          <div class="db-card-meta">
+            <span>研究中</span>
+            <span>in progress</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 物种数据状态表 -->
+      <div class="db-species-table">
+        <div class="db-table-header">
+          <h3>物种数据收录状态</h3>
+          <span class="db-table-count">7 species</span>
+        </div>
+        
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>物种</th>
+              <th>学名</th>
+              <th>科</th>
+              <th>基因组</th>
+              <th>转录组</th>
+              <th>线粒体</th>
+              <th>CO1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>密斑刺鲀</td>
+              <td class="sci-name">Diodon hystrix</td>
+              <td>Diodontidae</td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>六斑刺鲀</td>
+              <td class="sci-name">Diodon holocanthus</td>
+              <td>Diodontidae</td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>大斑刺鲀</td>
+              <td class="sci-name">Diodon liturosus</td>
+              <td>Diodontidae</td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>红鳍东方鲀</td>
+              <td class="sci-name">Takifugu rubripes</td>
+              <td>Tetraodontidae</td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>暗纹东方鲀</td>
+              <td class="sci-name">Takifugu fasciatus</td>
+              <td>Tetraodontidae</td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>纹腹叉鼻鲀</td>
+              <td class="sci-name">Arothron hispidus</td>
+              <td>Tetraodontidae</td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+            <tr>
+              <td>星斑叉鼻鲀</td>
+              <td class="sci-name">Arothron stellatus</td>
+              <td>Tetraodontidae</td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-pending">待测序</span></td>
+              <td><span class="db-status-tag db-status-partial">部分</span></td>
+              <td><span class="db-status-tag db-status-available">已收录</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- 数据来源说明 -->
+      <div style="margin-top: 3rem; padding: 2rem; background: #112240; border-radius: 8px; border-left: 3px solid var(--teal);">
+        <h3 style="color: #fff; font-family: var(--font-mono); font-size: 1rem; margin-bottom: 1rem;">数据来源与引用</h3>
+        <p style="color: #8892b0; font-size: 0.9rem; line-height: 1.8; margin-bottom: 1rem;">
+          DiodonDB 数据库整合了公开数据库（NCBI GenBank、Ensembl、DNA Data Bank of Japan 等）中的鲀形目物种分子数据，
+          以及本研究团队自主测序产生的数据。所有引用公共数据均标注原始来源，自主测序数据将在完成质控后公开发布。
+        </p>
+        <p style="color: #8892b0; font-size: 0.85rem; line-height: 1.7;">
+          如需引用本数据库中的数据，请注明来源：DiodonDB — Diodontidae & Tetraodontidae Genomics Database, 
+          Diodon Digital Museum.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  
+  <script>
+    MuseumUI.renderNavbar('diodondb');
+    MuseumUI.renderFooter();
+  </script>
+</body>
+</html>

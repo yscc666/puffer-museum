@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="creative-medium" content="interactive-prototype">
+  <title>物种百科 | 刺豚数字博物馆</title>
+  
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:ital,wght@0,400;0,600;1,400&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <div class="page-container">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1>物种百科</h1>
+      <p>7 种代表性刺鲀与河豚物种的完整图鉴——分类地位、形态特征、地理分布、生活习性、毒性与保护状态。</p>
+      <div class="page-header-ornament">
+        <span>Tetraodontiformes · 鲀形目</span>
+      </div>
+    </div>
+    
+    <!-- 物种列表 -->
+    <section class="section" style="background: var(--sand-light); padding-top: 3rem;">
+      <div class="section-inner">
+        <!-- 筛选标签 -->
+        <div style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 2.5rem; flex-wrap: wrap;">
+          <button class="specimen-ctrl-btn active filter-btn" data-filter="all" onclick="filterSpecies('all', this)" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+            全部物种
+          </button>
+          <button class="specimen-ctrl-btn filter-btn" data-filter="diodontidae" onclick="filterSpecies('diodontidae', this)" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+            刺鲀科（二齿）
+          </button>
+          <button class="specimen-ctrl-btn filter-btn" data-filter="tetraodontidae" onclick="filterSpecies('tetraodontidae', this)" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+            鲀科（四齿）
+          </button>
+          <button class="specimen-ctrl-btn filter-btn" data-filter="flagship" onclick="filterSpecies('flagship', this)" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+            旗舰物种
+          </button>
+        </div>
+        
+        <div id="species-grid" class="species-grid">
+          <!-- JS填充 -->
+        </div>
+      </div>
+    </section>
+    
+    <!-- 科普对比区 -->
+    <section id="comparison" class="comparison-section section">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker">Taxonomy</span>
+          <h2 class="section-title">二齿 vs 四齿：两大家族的区别</h2>
+          <p class="section-desc">刺鲀科和鲀科同属鲀形目，但分别代表了"二齿"和"四齿"两大演化支系。</p>
+        </div>
+        
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h3>
+              <span style="color: var(--teal);">刺鲀科</span> Diodontidae
+              <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">· 二齿鲀科</span>
+            </h3>
+            <ul>
+              <li><strong>齿式：</strong>上下颌各 1 个愈合的喙状齿板，无中央缝，故称"二齿"</li>
+              <li><strong>体表：</strong>全身布满坚硬长棘，棘由特化鳞片演变而来</li>
+              <li><strong>防御：</strong>遇敌吞水膨胀成球，棘竖立如刺球，捕食者难以入口</li>
+              <li><strong>体型：</strong>体短圆筒形，头体宽圆</li>
+              <li><strong>代表属：</strong>刺鲀属（Diodon）、短刺鲀属（Chilomycterus）等</li>
+              <li><strong>本馆收录：</strong>密斑刺鲀、六斑刺鲀、大斑刺鲀</li>
+            </ul>
+          </div>
+          
+          <div class="comparison-card tetraodon">
+            <h3>
+              <span style="color: var(--coral);">鲀科</span> Tetraodontidae
+              <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">· 四齿鲀科</span>
+            </h3>
+            <ul>
+              <li><strong>齿式：</strong>上下颌各 2 个愈合的喙状齿板，有中央缝，故称"四齿"</li>
+              <li><strong>体表：</strong>皮肤光滑或具细小皮刺，无长棘</li>
+              <li><strong>防御：</strong>吞水膨胀成球后浮上水面，随波漂流；靠体内毒素威慑捕食者</li>
+              <li><strong>体型：</strong>多呈亚圆筒形，部分种类侧扁</li>
+              <li><strong>代表属：</strong>东方鲀属（Takifugu）、叉鼻鲀属（Arothron）等</li>
+              <li><strong>本馆收录：</strong>红鳍东方鲀、暗纹东方鲀、纹腹叉鼻鲀、星斑叉鼻鲀</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 河豚毒素科普 -->
+    <section id="toxicity" class="section" style="background: #fff;">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker" style="color: var(--coral-red);">Toxicology</span>
+          <h2 class="section-title">河豚毒素（TTX）</h2>
+          <p class="section-desc">已知毒性最强的海洋天然毒素之一，了解它，才能安全地与刺豚共存。</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <div style="background: var(--coral-cream); border-radius: 8px; padding: 1.8rem; border-top: 3px solid var(--coral-red);">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--coral-red); margin-bottom: 0.8rem;">什么是 TTX？</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">
+              河豚毒素（Tetrodotoxin, TTX）是一种强效的神经毒素，能阻断钠离子通道，导致肌肉麻痹和呼吸衰竭。其毒性是氰化物的 1000 倍以上，且耐热，普通烹饪无法破坏。
+            </p>
+          </div>
+          
+          <div style="background: var(--sand-light); border-radius: 8px; padding: 1.8rem; border-top: 3px solid var(--teal);">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--deep-ocean); margin-bottom: 0.8rem;">毒素从哪来？</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">
+              河豚自身<strong>不能合成</strong> TTX，主要通过食物链从含毒微生物（如某些海洋细菌、涡虫）中积累。这也是为什么不同地域、不同季节的河豚毒性差异显著。
+            </p>
+          </div>
+          
+          <div style="background: var(--sand-light); border-radius: 8px; padding: 1.8rem; border-top: 3px solid var(--amber);">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--deep-ocean); margin-bottom: 0.8rem;">毒性分布</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">
+              毒素主要集中在：卵巢、肝脏、肾脏、皮肤、肠道。肌肉通常无毒或低毒，但需注意污染。
+            </p>
+            <div class="data-viz-small">
+              <div class="data-bar-row">
+                <span class="data-bar-label">卵巢</span>
+                <div class="data-bar-track"><div class="data-bar-fill" style="width: 95%; background: var(--coral-red);"></div></div>
+                <span class="data-bar-value">极高</span>
+              </div>
+              <div class="data-bar-row">
+                <span class="data-bar-label">肝脏</span>
+                <div class="data-bar-track"><div class="data-bar-fill" style="width: 88%; background: var(--coral-red);"></div></div>
+                <span class="data-bar-value">极高</span>
+              </div>
+              <div class="data-bar-row">
+                <span class="data-bar-label">皮肤</span>
+                <div class="data-bar-track"><div class="data-bar-fill" style="width: 60%; background: var(--coral);"></div></div>
+                <span class="data-bar-value">高</span>
+              </div>
+              <div class="data-bar-row">
+                <span class="data-bar-label">肌肉</span>
+                <div class="data-bar-track"><div class="data-bar-fill" style="width: 15%; background: var(--amber);"></div></div>
+                <span class="data-bar-value">低</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: var(--sand-light); border-radius: 8px; padding: 1.8rem; border-top: 3px solid var(--toxic-green);">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--deep-ocean); margin-bottom: 0.8rem;">食用安全</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">
+              中国自 1990 年起禁止野生河豚流通。2016 年起，允许红鳍东方鲀、暗纹东方鲀两种<strong>人工养殖</strong>河豚经定点加工企业合规经营，需严格去毒处理。
+            </p>
+            <p style="font-size: 0.8rem; color: var(--toxic-green); margin-top: 0.8rem; font-weight: 500;">
+              ⚠ 严禁自行捕捞、食用野生河豚
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 膨胀防御 -->
+    <section id="defense" class="section" style="background: linear-gradient(180deg, var(--coral-cream), var(--sand-light));">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-kicker">Defense Mechanism</span>
+          <h2 class="section-title">膨胀：神奇的防御术</h2>
+          <p class="section-desc">刺豚遇到威胁时，能在短短几秒内把身体膨胀到原来的数倍大——它是怎么做到的？</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; max-width: 1000px; margin: 0 auto;">
+          <div style="text-align: center;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 1rem; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+              <div style="text-align: center;">
+                <div style="font-family: var(--font-display); font-size: 1.5rem; color: var(--deep-ocean);">1x</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">正常状态</div>
+              </div>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--deep-ocean); margin-bottom: 0.5rem;">平静巡游</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              身体呈正常的圆筒形或椭圆形，棘刺平贴体表（刺鲀），皮肤光滑（鲀科）。在栖息地正常活动觅食。
+            </p>
+          </div>
+          
+          <div style="text-align: center;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 1rem; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+              <div style="text-align: center;">
+                <div style="font-family: var(--font-display); font-size: 1.5rem; color: var(--teal);">2-3x</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">吞水膨胀</div>
+              </div>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--deep-ocean); margin-bottom: 0.5rem;">吞水扩张</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              感知到威胁后，迅速吞入大量水（或空气），使胃和体腔急剧扩张。皮肤具有极强的延展性。
+            </p>
+          </div>
+          
+          <div style="text-align: center;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 1rem; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+              <div style="text-align: center;">
+                <div style="font-family: var(--font-display); font-size: 1.2rem; color: var(--coral-red);">刺球</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">完全防御</div>
+              </div>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--deep-ocean); margin-bottom: 0.5rem;">刺球形态</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              刺鲀的棘刺随膨胀而竖起，变成一个"刺球"；鲀科则膨胀成球浮上水面，靠体内毒素威慑。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  
+  <script>
+    MuseumUI.renderNavbar('species');
+    MuseumUI.renderFooter();
+    
+    // 渲染物种卡片
+    function renderSpecies(filter = 'all') {
+      const grid = document.getElementById('species-grid');
+      if (!grid || !window.SPECIES_DATA) return;
+      
+      let filtered = SPECIES_DATA;
+      if (filter === 'diodontidae') {
+        filtered = SPECIES_DATA.filter(s => s.family === 'Diodontidae');
+      } else if (filter === 'tetraodontidae') {
+        filtered = SPECIES_DATA.filter(s => s.family === 'Tetraodontidae');
+      } else if (filter === 'flagship') {
+        filtered = SPECIES_DATA.filter(s => s.flagship);
+      }
+      
+      grid.innerHTML = filtered.map(s => MuseumUI.renderSpeciesCard(s, true)).join('');
+    }
+    
+    function filterSpecies(filter, btn) {
+      // 更新按钮状态
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSpecies(filter);
+    }
+    
+    // 初始渲染
+    renderSpecies('all');
+  </script>
+</body>
+</html>

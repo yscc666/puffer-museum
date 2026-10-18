@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="creative-medium" content="interactive-prototype">
+  <title>3D标本馆 | 刺豚数字博物馆</title>
+  
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:ital,wght@0,400;0,600;1,400&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+  
+  <link rel="preload" as="script" href="assets/js/three.min.js">
+</head>
+<body class="specimen-page">
+  <div class="page-container">
+    <div class="specimen-hero">
+      <span class="section-kicker" style="color: var(--turquoise);">Hall 01 · 3D Specimen Gallery</span>
+      <h1 class="section-title" style="color: #fff;">3D 标本馆</h1>
+      <p class="section-desc" style="color: rgba(255,255,255,0.7);">
+        每一件标本都可旋转、缩放、细察。拖拽模型查看不同角度，滚轮缩放观察细节——如同亲手持握一件标本。
+      </p>
+    </div>
+    
+    <!-- 刺鲀科展区 -->
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <div style="width: 4px; height: 24px; background: var(--teal); border-radius: 2px;"></div>
+        <h2 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--deep-ocean);">刺鲀科（二齿鲀科）Diodontidae</h2>
+      </div>
+      
+      <div class="specimen-3d-grid" style="padding: 0 0 3rem;">
+        <!-- 密斑刺鲀 -->
+        <div class="specimen-3d-card" id="card-hystrix">
+          <div class="specimen-3d-canvas-wrap" data-species="hystrix">
+            <span class="specimen-badge real">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:0.3rem;"></span>
+              实体标本
+            </span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">密斑刺鲀</div>
+            <div class="specimen-3d-sci">Diodon hystrix · 旗舰物种</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              全身密布黑色小斑点，眼下方有褐色弧带。前部棘 2 棘根可活动，后部棘 3 棘根不可活动。最大体长可达 91 cm。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'hystrix')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                </svg>
+                自动旋转
+              </button>
+              <button class="specimen-ctrl-btn" onclick="resetView('hystrix')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                </svg>
+                重置视角
+              </button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('hystrix')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 8v8M8 12h8"/>
+                </svg>
+                膨胀
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 六斑刺鲀 -->
+        <div class="specimen-3d-card" id="card-holocanthus">
+          <div class="specimen-3d-canvas-wrap" data-species="holocanthus">
+            <span class="specimen-badge real">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:0.3rem;"></span>
+              实体标本
+            </span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">六斑刺鲀</div>
+            <div class="specimen-3d-sci">Diodon holocanthus</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              体背侧灰褐色，具 6 块黑色斑块和黑色小斑点。棘坚硬而长，尾柄无小棘。遇敌吸水膨胀，棘竖立如刺猬。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'holocanthus')">自动旋转</button>
+              <button class="specimen-ctrl-btn" onclick="resetView('holocanthus')">重置视角</button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('holocanthus')">膨胀</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 大斑刺鲀 -->
+        <div class="specimen-3d-card" id="card-liturosus">
+          <div class="specimen-3d-canvas-wrap" data-species="liturosus">
+            <span class="specimen-badge">
+              数字模型
+            </span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">大斑刺鲀</div>
+            <div class="specimen-3d-sci">Diodon liturosus</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              热带暖水性底层鱼类，栖息于浅海礁石周缘或陡坡附近。体黄色至淡褐色，具大形黑色斑块。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'liturosus')">自动旋转</button>
+              <button class="specimen-ctrl-btn" onclick="resetView('liturosus')">重置视角</button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('liturosus')">膨胀</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 鲀科展区 -->
+      <div style="display: flex; align-items: center; gap: 1rem; margin: 2rem 0 1.5rem;">
+        <div style="width: 4px; height: 24px; background: var(--coral); border-radius: 2px;"></div>
+        <h2 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--deep-ocean);">鲀科（四齿鲀科）Tetraodontidae</h2>
+      </div>
+      
+      <div class="specimen-3d-grid" style="padding: 0 0 4rem;">
+        <!-- 红鳍东方鲀 -->
+        <div class="specimen-3d-card" id="card-rubripes">
+          <div class="specimen-3d-canvas-wrap" data-species="rubripes">
+            <span class="specimen-badge">数字模型</span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">红鳍东方鲀</div>
+            <div class="specimen-3d-sci">Takifugu rubripes</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              即"虎河豚"，日本料理珍品。胸鳍后上方有白缘黑色大斑（胸斑），背面带浅灰色小圆点与黑色虎斑。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'rubripes')">自动旋转</button>
+              <button class="specimen-ctrl-btn" onclick="resetView('rubripes')">重置视角</button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('rubripes')">膨胀</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 暗纹东方鲀 -->
+        <div class="specimen-3d-card" id="card-fasciatus">
+          <div class="specimen-3d-canvas-wrap" data-species="fasciatus">
+            <span class="specimen-badge">数字模型</span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">暗纹东方鲀</div>
+            <div class="specimen-3d-sci">Takifugu fasciatus</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              背部茶褐色，有 5-6 条暗褐色宽横纹。海淡水洄游鱼类，"拼死吃河豚"典故即源于此类。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'fasciatus')">自动旋转</button>
+              <button class="specimen-ctrl-btn" onclick="resetView('fasciatus')">重置视角</button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('fasciatus')">膨胀</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 纹腹叉鼻鲀 -->
+        <div class="specimen-3d-card" id="card-hispidus">
+          <div class="specimen-3d-canvas-wrap" data-species="hispidus">
+            <span class="specimen-badge">数字模型</span>
+            <canvas class="specimen-3d-canvas"></canvas>
+          </div>
+          <div class="specimen-3d-info">
+            <div class="specimen-3d-name">纹腹叉鼻鲀</div>
+            <div class="specimen-3d-sci">Arothron hispidus</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+              四齿鲀科代表物种，体表光滑仅具隐蔽短小皮刺，与布满长棘的刺鲀科形成鲜明对比。
+            </p>
+            <div class="specimen-3d-controls">
+              <button class="specimen-ctrl-btn active" onclick="toggleAutoRotate(this, 'hispidus')">自动旋转</button>
+              <button class="specimen-ctrl-btn" onclick="resetView('hispidus')">重置视角</button>
+              <button class="specimen-ctrl-btn" onclick="inflateFish('hispidus')">膨胀</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 实体标本专属展位 -->
+      <div id="real-specimens" style="padding: 3rem 0 4rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="width: 4px; height: 24px; background: var(--amber); border-radius: 2px;"></div>
+          <h2 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--deep-ocean);">实体标本专属展位</h2>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, var(--label-paper) 0%, #fff 100%); border: 2px dashed var(--amber); border-radius: 12px; padding: 3rem; text-align: center; margin-bottom: 2rem;">
+          <div style="width: 64px; height: 64px; margin: 0 auto 1.5rem; background: rgba(212, 160, 23, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--amber);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 7h-3V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a1 1 0 0 0-1-1z"/>
+              <path d="M9 5h6v2H9V5z"/>
+              <path d="M12 11v6M9 14h6"/>
+            </svg>
+          </div>
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--deep-ocean); margin-bottom: 0.8rem;">
+            实体标本数字化展位
+          </h3>
+          <p style="color: var(--text-secondary); max-width: 560px; margin: 0 auto 1.5rem; line-height: 1.8;">
+            此展位为实体标本数字化预留。当前展出的 3D 模型为程序化生成的参考模型，
+            后续将替换为实体标本的高精度三维扫描模型，完整还原每一根棘刺、每一处斑纹的真实形态。
+          </p>
+          <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(212, 160, 23, 0.15); border-radius: 4px; font-size: 0.85rem; color: var(--amber);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4l3 3"/>
+            </svg>
+            待扫描 · TBD
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+          <div style="background: #fff; border-radius: 8px; padding: 1.5rem; border: 1px solid var(--sand); text-align: center;">
+            <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: rgba(26, 188, 156, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--teal);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <h4 style="color: var(--deep-ocean); margin-bottom: 0.5rem; font-size: 1rem;">360° 扫描</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">高精度三维扫描，全方位捕捉标本形态细节</p>
+          </div>
+          
+          <div style="background: #fff; border-radius: 8px; padding: 1.5rem; border: 1px solid var(--sand); text-align: center;">
+            <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: rgba(212, 160, 23, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--amber);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <h4 style="color: var(--deep-ocean); margin-bottom: 0.5rem; font-size: 1rem;">纹理还原</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">真实照片纹理映射，还原色斑与体色</p>
+          </div>
+          
+          <div style="background: #fff; border-radius: 8px; padding: 1.5rem; border: 1px solid var(--sand); text-align: center;">
+            <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: rgba(224, 122, 95, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--coral);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <h4 style="color: var(--deep-ocean); margin-bottom: 0.5rem; font-size: 1rem;">测量数据</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">精确体长、体重、棘长等形态测量数据</p>
+          </div>
+          
+          <div style="background: #fff; border-radius: 8px; padding: 1.5rem; border: 1px solid var(--sand); text-align: center;">
+            <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: rgba(107, 142, 35, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--toxic-green);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h4 style="color: var(--deep-ocean); margin-bottom: 0.5rem; font-size: 1rem;">标本档案</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">采集地、采集时间、鉴定人等完整标本信息</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 脚本 -->
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/GLTFLoader.js"></script>
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script src="assets/js/pufferfish3d.js"></script>
+  
+  <script>
+    MuseumUI.renderNavbar('specimen');
+    MuseumUI.renderFooter();
+    
+    const scenes = {};
+    let inflateStates = {};
+    
+    window.addEventListener('load', () => {
+      // 为每个标本卡初始化3D
+      const cards = document.querySelectorAll('.specimen-3d-canvas-wrap');
+      cards.forEach(wrap => {
+        const species = wrap.dataset.species;
+        const canvas = wrap.querySelector('.specimen-3d-canvas');
+        if (canvas && window.Pufferfish3D) {
+          try {
+            scenes[species] = Pufferfish3D.createScene(wrap, {
+              species: species,
+              autoRotate: true,
+              rotateSpeed: 0.006,
+              interactive: true,
+            });
+            inflateStates[species] = false;
+          } catch(e) {
+            console.error('3D init failed for', species, e);
+          }
+        }
+      });
+    });
+    
+    function toggleAutoRotate(btn, species) {
+      if (!scenes[species]) return;
+      const isAuto = scenes[species].toggleAutoRotate();
+      btn.classList.toggle('active', isAuto);
+    }
+    
+    function resetView(species) {
+      if (!scenes[species]) return;
+      scenes[species].resetView();
+    }
+    
+    function inflateFish(species) {
+      if (!scenes[species]) return;
+      inflateStates[species] = !inflateStates[species];
+      scenes[species].inflate(inflateStates[species] ? 1 : 0);
+    }
+  </script>
+</body>
+</html>

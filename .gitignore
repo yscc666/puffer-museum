@@ -1,0 +1,6 @@
+﻿_tex/
+_model*.png
+_shots/
+_chrome*/
+_glb*
+test-*.html

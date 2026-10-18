@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="creative-medium" content="interactive-prototype">
+  <title>物种详情 | 刺豚数字博物馆</title>
+  
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:ital,wght@0,400;0,600;1,400&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+  
+  <link rel="preload" as="script" href="assets/js/three.min.js">
+</head>
+<body>
+  <div class="page-container">
+    <div class="species-detail">
+      <a href="species.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        返回物种百科
+      </a>
+      
+      <div id="detail-content">
+        <!-- JS 填充 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  
+  <script>
+    MuseumUI.renderNavbar('species');
+    MuseumUI.renderFooter();
+    
+    // 获取URL参数
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+    
+    // 渲染详情
+    function renderDetail() {
+      const id = getQueryParam('id') || 'hystrix';
+      const species = SPECIES_DATA.find(s => s.id === id) || SPECIES_DATA[0];
+      const container = document.getElementById('detail-content');
+      
+      if (!container) return;
+      
+      const toxicClass = species.toxicityLevel === 'high' ? '剧毒' : '有毒';
+      
+      container.innerHTML = `
+        <div class="species-detail-hero">
+          <div class="species-detail-image">
+            <img src="${MuseumUI.getSpeciesImage(species.image)}" alt="${species.name}">
+          </div>
+          
+          <div>
+            <h1 class="species-detail-name">${species.name}</h1>
+            <div class="species-detail-sci">${species.sciName}</div>
+            <div class="species-detail-author">${species.author || ''}</div>
+            
+            ${species.flagship ? '<div style="display: inline-block; padding: 0.3rem 0.9rem; background: var(--amber); color: var(--deep-ocean); font-size: 0.8rem; font-weight: 600; border-radius: 3px; margin-bottom: 1rem;">旗舰物种</div>' : ''}
+            
+            <!-- 分类学标签 -->
+            <div class="species-detail-taxonomy">
+              <div class="taxonomy-title">分类地位 Taxonomy</div>
+              <div class="taxonomy-ranks">
+                <span class="taxonomy-rank">
+                  <span class="taxonomy-rank-label">目</span>
+                  <span class="taxonomy-rank-value">${species.orderCn}</span>
+                </span>
+                <span class="taxonomy-rank">
+                  <span class="taxonomy-rank-label">科</span>
+                  <span class="taxonomy-rank-value">${species.familyCn}</span>
+                </span>
+                <span class="taxonomy-rank">
+                  <span class="taxonomy-rank-label">属</span>
+                  <span class="taxonomy-rank-value">${species.genus}</span>
+                </span>
+                <span class="taxonomy-rank">
+                  <span class="taxonomy-rank-label">种</span>
+                  <span class="taxonomy-rank-value" style="font-style: italic; font-family: var(--font-sci);">${species.sciName.split(' ')[1]}</span>
+                </span>
+              </div>
+            </div>
+            
+            <!-- 体长数据 -->
+            <div class="species-detail-stats">
+              <div class="stat-item">
+                <div class="stat-value">${species.maxLength}</div>
+                <div class="stat-label">最大体长</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" style="font-size: 1rem;">${species.commonLength || '—'}</div>
+                <div class="stat-label">常见体长</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" style="font-size: 1rem;">IUCN ${species.conservation}</div>
+                <div class="stat-label">${species.conservationCn}</div>
+              </div>
+            </div>
+            
+            <!-- 别名 -->
+            ${species.aliases && species.aliases.length ? `
+            <div style="margin-bottom: 1rem;">
+              <span style="font-size: 0.8rem; color: var(--text-muted); margin-right: 0.5rem;">别名：</span>
+              ${species.aliases.map(a => `<span class="tag">${a}</span>`).join(' ')}
+            </div>
+            ` : ''}
+            
+            <!-- 英文名 -->
+            <div style="font-size: 0.9rem; color: var(--text-secondary);">
+              <span style="color: var(--text-muted);">英文名：</span>
+              <em style="color: var(--sea-blue);">${species.english}</em>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 毒性警告 -->
+        <div class="toxicity-warning">
+          <svg class="toxicity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div class="toxicity-content">
+            <h4>${toxicClass}鱼类 · 请勿自行食用</h4>
+            <p>${species.toxicity}</p>
+          </div>
+        </div>
+        
+        <!-- 保护状态 -->
+        <div class="conservation-status">
+          <span class="conservation-badge">IUCN ${species.conservation} · ${species.conservationCn}</span>
+          <span class="conservation-text">根据 IUCN 红色名录评估，${species.name} 目前处于"${species.conservationCn}"等级。</span>
+        </div>
+        
+        <div class="species-detail-grid">
+          <div>
+            <div class="species-detail-section">
+              <h2>形态特征</h2>
+              <p>${species.morphology}</p>
+            </div>
+            
+            <div class="species-detail-section">
+              <h2>分布与栖息</h2>
+              <p><strong style="color: var(--deep-ocean);">地理分布：</strong>${species.distribution}</p>
+              <p><strong style="color: var(--deep-ocean);">栖息环境：</strong>${species.habitat}</p>
+            </div>
+            
+            <div class="species-detail-section">
+              <h2>生活习性</h2>
+              <p>${species.behavior || '资料整理中。'}</p>
+            </div>
+          </div>
+          
+          <div>
+            <div class="species-detail-section">
+              <h2>毒性说明</h2>
+              <p>${species.toxicity}</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                河豚毒素（TTX）为强效神经毒素，耐热，普通烹饪无法破坏。
+                食用河豚须经持证专业人员严格处理。
+              </p>
+            </div>
+            
+            ${species.etymology ? `
+            <div class="species-detail-section">
+              <h2>学名含义</h2>
+              <p>${species.etymology}</p>
+            </div>
+            ` : ''}
+            
+            ${species.culture ? `
+            <div class="species-detail-section">
+              <h2>文化背景</h2>
+              <p>${species.culture}</p>
+            </div>
+            ` : ''}
+            
+            ${species.economicValue ? `
+            <div class="species-detail-section">
+              <h2>经济价值</h2>
+              <p>${species.economicValue}</p>
+            </div>
+            ` : ''}
+            
+            <div class="species-detail-section">
+              <h2>科研数据</h2>
+              <p style="margin-bottom: 1rem;">本物种的分子生物学数据收录于 DiodonDB 生信数据库中。</p>
+              <a href="diodondb.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.7rem 1.3rem;">
+                查看 DiodonDB
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+            
+            <div class="species-detail-section">
+              <h2>3D标本</h2>
+              <p style="margin-bottom: 1rem;">可交互 3D 模型，旋转缩放查看形态细节。</p>
+              <a href="specimen.html#card-${species.id}" class="btn btn-outline" style="background: #fff; color: var(--sea-blue); border-color: var(--sea-blue); font-size: 0.85rem; padding: 0.7rem 1.3rem;">
+                查看 3D 标本
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // 更新页面标题
+      document.title = `${species.name} | 刺豚数字博物馆`;
+    }
+    
+    renderDetail();
+  </script>
+</body>
+</html>
