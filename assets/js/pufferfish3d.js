@@ -256,10 +256,10 @@ const Pufferfish3D = {
    */
   buildFish(group, species) {
     const profile = [
-      [1.50, 0.22], [1.44, 0.32], [1.36, 0.46], [1.24, 0.60],
-      [1.08, 0.74], [0.88, 0.88], [0.62, 0.98], [0.30, 1.02],
-      [0.00, 1.02], [-0.32, 0.99], [-0.62, 0.92], [-0.92, 0.78],
-      [-1.16, 0.60], [-1.36, 0.42], [-1.52, 0.28], [-1.64, 0.18],
+      [1.08, 0.44], [1.02, 0.58], [0.92, 0.74], [0.78, 0.92],
+      [0.60, 1.06], [0.40, 1.15], [0.20, 1.18], [0.00, 1.18],
+      [-0.22, 1.16], [-0.44, 1.10], [-0.66, 0.98], [-0.86, 0.80],
+      [-1.00, 0.60], [-1.10, 0.42], [-1.18, 0.28],
     ];
 
     // ---- 皮肤贴图（含物种图案 + 腹部白色） ----
@@ -267,7 +267,7 @@ const Pufferfish3D = {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
 
     const bodyMat = new THREE.MeshStandardMaterial({
-      map: tex, bumpMap: tex, bumpScale: 0.45,
+      map: tex, bumpMap: tex, bumpScale: 0.15,
       roughness: 0.86, metalness: 0.0,
     });
 
@@ -277,47 +277,48 @@ const Pufferfish3D = {
     body.receiveShadow = true;
     group.add(body);
 
-    // ---- 嘴（白色板状齿，鹦鹉嘴） ----
-    const beakMat = new THREE.MeshStandardMaterial({ color: 0xf0ead8, roughness: 0.5 });
-    const beak = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.022, 10, 28, Math.PI * 0.72), beakMat);
-    beak.position.set(1.40, -0.05, 0);
+    // ---- 嘴（白色板状齿，鹦鹉嘴，位于头端腹侧） ----
+    const beakMat = new THREE.MeshStandardMaterial({ color: 0xf5efdd, roughness: 0.5 });
+    const beak = new THREE.Mesh(new THREE.TorusGeometry(0.10, 0.025, 10, 30, Math.PI * 0.8), beakMat);
+    beak.position.set(1.10, -0.10, 0);
     beak.rotation.x = Math.PI / 2;
-    beak.rotation.z = 0.10;
+    beak.rotation.z = 0.12;
     group.add(beak);
     const lipMat = new THREE.MeshStandardMaterial({ color: 0x4a3a28, roughness: 0.85 });
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.006, 6, 24, Math.PI * 0.72), lipMat);
-    lip.position.set(1.40, -0.045, 0.016);
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(0.10, 0.007, 6, 26, Math.PI * 0.8), lipMat);
+    lip.position.set(1.10, -0.092, 0.018);
     lip.rotation.x = Math.PI / 2;
-    lip.rotation.z = 0.10;
+    lip.rotation.z = 0.12;
     group.add(lip);
 
-    // ---- 眼睛（扁平贴片式：褐色眼带 + 金色虹膜盘 + 瞳孔 + 高光） ----
+    // ---- 眼睛（大而圆的萌眼：深色眼带 + 金色虹膜 + 大黑瞳 + 高光） ----
     const eyeSocketMat = new THREE.MeshStandardMaterial({ color: 0x5a4630, roughness: 0.6 });
     const irisMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: 0.4 });
     const pupilMat = new THREE.MeshStandardMaterial({ color: 0x0d0d12, roughness: 0.1 });
-    const glintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05, emissive: 0xffffff, emissiveIntensity: 0.5 });
+    const glintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05, emissive: 0xffffff, emissiveIntensity: 0.55 });
     [-1, 1].forEach(s => {
       const eyeG = new THREE.Group();
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.022, 12, 28), eyeSocketMat);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.024, 14, 32), eyeSocketMat);
       eyeG.add(ring);
-      const iris = new THREE.Mesh(new THREE.CircleGeometry(0.068, 28), irisMat);
+      const iris = new THREE.Mesh(new THREE.CircleGeometry(0.092, 32), irisMat);
       iris.position.z = 0.002;
       eyeG.add(iris);
-      const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.040, 24), pupilMat);
+      const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.058, 28), pupilMat);
       pupil.position.z = 0.006;
       eyeG.add(pupil);
-      const glint = new THREE.Mesh(new THREE.CircleGeometry(0.014, 12), glintMat);
-      glint.position.set(0.026, 0.030, 0.010);
+      const glint = new THREE.Mesh(new THREE.CircleGeometry(0.024, 14), glintMat);
+      glint.position.set(0.030, 0.038, 0.010);
       eyeG.add(glint);
       // 眼下方褐色弧带（密斑刺鲀特征）
-      const brow = new THREE.Mesh(new THREE.TorusGeometry(0.078, 0.008, 8, 24, Math.PI * 0.6), eyeSocketMat);
+      const brow = new THREE.Mesh(new THREE.TorusGeometry(0.104, 0.009, 8, 28, Math.PI * 0.6), eyeSocketMat);
       brow.rotation.x = Math.PI / 2;
       brow.rotation.z = 0.6;
-      brow.position.set(0.02, -0.075, 0.004);
+      brow.position.set(0.02, -0.098, 0.004);
       eyeG.add(brow);
-      eyeG.position.set(0.58, 0.33, s * 0.82);
-      if (s < 0) eyeG.rotation.y = Math.PI;
-      eyeG.rotation.z = -s * 0.06;
+      // 眼睛精确贴合球面，贴片方向朝外
+      eyeG.position.set(0.573, 0.481, s * 0.917);
+      const normal = new THREE.Vector3(0.486, 0.408, s * 0.777);
+      eyeG.lookAt(eyeG.position.clone().add(normal));
       group.add(eyeG);
     });
 
@@ -357,8 +358,8 @@ const Pufferfish3D = {
       for (let j = 0; j <= seg; j++) {
         const u = j / seg;
         const theta = u * Math.PI * 2;
-        const flat = 1 - 0.10 * Math.max(0, -Math.sin(theta)); // 腹部略平（背部圆、腹部平）
-        const rr = r * flat * (1 - 0.07 * Math.abs(Math.cos(theta))); // 左右略窄，侧面观更圆鼓
+        const flat = 1 - 0.06 * Math.max(0, -Math.sin(theta)); // 腹部略平（保持圆润）
+        const rr = r * flat * (1 - 0.05 * Math.abs(Math.cos(theta))); // 左右略窄，整体更圆鼓
         positions.push(x, rr * Math.sin(theta), rr * Math.cos(theta));
         uvs.push(u, v);
       }
@@ -389,14 +390,14 @@ const Pufferfish3D = {
     const ctx = c.getContext('2d');
 
     const base = {
-      hystrix: '#c0a566',
+      hystrix: '#d9b98a',
       holocanthus: '#b5a077',
       liturosus: '#cbb27e',
       rubripes: '#7f8b93',
       fasciatus: '#9a845f',
       hispidus: '#6e7a76',
       stellatus: '#6b7a85',
-    }[species] || '#c0a566';
+    }[species] || '#d9b98a';
 
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, w, h);
@@ -413,16 +414,16 @@ const Pufferfish3D = {
     // 物种特征图案
     this._drawPattern(ctx, species, w, h);
 
-    // 腹部白色带（u 0.60~0.90 中心渐变白）
+    // 腹部白色带（u 0.60~0.90 中心渐变白，更白更宽）
     const ax = 0.60 * w, bx = 0.90 * w, cx = 0.75 * w;
     const g1 = ctx.createLinearGradient(ax, 0, cx, 0);
-    g1.addColorStop(0, 'rgba(248,244,233,0)');
-    g1.addColorStop(1, 'rgba(248,244,233,0.96)');
+    g1.addColorStop(0, 'rgba(250,247,238,0)');
+    g1.addColorStop(1, 'rgba(250,247,238,0.97)');
     ctx.fillStyle = g1;
     ctx.fillRect(ax, 0, cx - ax, h);
     const g2 = ctx.createLinearGradient(cx, 0, bx, 0);
-    g2.addColorStop(0, 'rgba(248,244,233,0.96)');
-    g2.addColorStop(1, 'rgba(248,244,233,0)');
+    g2.addColorStop(0, 'rgba(250,247,238,0.97)');
+    g2.addColorStop(1, 'rgba(250,247,238,0)');
     ctx.fillStyle = g2;
     ctx.fillRect(cx, 0, bx - cx, h);
 
@@ -442,26 +443,26 @@ const Pufferfish3D = {
     };
 
     if (species === 'hystrix') {
-      // 密斑：黑色小圆点均匀分布
-      for (let i = 0; i < 400; i++) {
+      // 密斑：黑色小圆点均匀分布（更清晰圆润）
+      for (let i = 0; i < 340; i++) {
         const u = Math.random(), v = Math.random();
         if (u > 0.60 && u < 0.88) continue; // 腹白带内少斑
-        const r = 2.5 + Math.random() * 4.5;
-        ctx.fillStyle = 'rgba(34,26,16,0.92)';
+        const r = 2.8 + Math.random() * 4.6;
+        ctx.fillStyle = 'rgba(26,18,10,0.95)';
         ctx.beginPath();
         ctx.arc(u * w, v * h, r, 0, Math.PI * 2);
         ctx.fill();
       }
       // 局部密斑群（自然的斑块聚群）
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 12; i++) {
         const u = Math.random(), v = Math.random();
         if (u > 0.62 && u < 0.86) continue;
         const cx = u * w, cy = v * h;
-        for (let j = 0; j < 7 + Math.random() * 9; j++) {
-          const r = 1.6 + Math.random() * 2.8;
-          ctx.fillStyle = 'rgba(28,20,14,0.9)';
+        for (let j = 0; j < 6 + Math.random() * 8; j++) {
+          const r = 1.8 + Math.random() * 3;
+          ctx.fillStyle = 'rgba(22,16,10,0.95)';
           ctx.beginPath();
-          ctx.arc(cx + (Math.random() - 0.5) * 30, cy + (Math.random() - 0.5) * 22, r, 0, Math.PI * 2);
+          ctx.arc(cx + (Math.random() - 0.5) * 28, cy + (Math.random() - 0.5) * 20, r, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -597,54 +598,54 @@ const Pufferfish3D = {
     });
     const rayMat = new THREE.MeshStandardMaterial({ color: 0xb8a477, roughness: 0.8 });
 
-    // 尾鳍（圆形扇形）
+    // 尾鳍（小巧圆形扇形，贴合球体尾部）
     const tailShape = new THREE.Shape();
     tailShape.moveTo(0, 0);
-    tailShape.quadraticCurveTo(0.18, 0.34, 0.42, 0.38);
-    tailShape.quadraticCurveTo(0.28, 0.16, 0.30, 0);
-    tailShape.quadraticCurveTo(0.28, -0.16, 0.42, -0.38);
-    tailShape.quadraticCurveTo(0.18, -0.34, 0, 0);
+    tailShape.quadraticCurveTo(0.12, 0.24, 0.26, 0.27);
+    tailShape.quadraticCurveTo(0.18, 0.11, 0.19, 0);
+    tailShape.quadraticCurveTo(0.18, -0.11, 0.26, -0.27);
+    tailShape.quadraticCurveTo(0.12, -0.24, 0, 0);
     const tailFin = new THREE.Mesh(new THREE.ShapeGeometry(tailShape), finMat);
     tailFin.rotation.y = Math.PI / 2;
-    tailFin.position.set(-1.78, 0.02, 0);
+    tailFin.position.set(-1.26, 0.02, 0);
     group.add(tailFin);
     for (let i = -1; i <= 1; i++) {
-      const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.005, 0.5, 6), rayMat);
+      const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.004, 0.32, 6), rayMat);
       ray.rotation.z = Math.PI / 2;
-      ray.rotation.y = i * 0.16;
-      ray.position.set(-1.82, 0.03 + i * 0.16, 0);
+      ray.rotation.y = i * 0.15;
+      ray.position.set(-1.30, 0.02 + i * 0.11, 0);
       group.add(ray);
     }
 
-    // 背鳍（圆刀形，位于身体后部）
+    // 背鳍（小圆刀形，位于身体后上部）
     const dorsalShape = new THREE.Shape();
-    dorsalShape.moveTo(-0.18, 0);
-    dorsalShape.quadraticCurveTo(-0.10, 0.30, 0.05, 0.42);
-    dorsalShape.quadraticCurveTo(0.16, 0.26, 0.22, 0);
-    dorsalShape.quadraticCurveTo(0.05, 0.06, -0.18, 0);
+    dorsalShape.moveTo(-0.15, 0);
+    dorsalShape.quadraticCurveTo(-0.08, 0.22, 0.03, 0.30);
+    dorsalShape.quadraticCurveTo(0.11, 0.18, 0.16, 0);
+    dorsalShape.quadraticCurveTo(0.04, 0.05, -0.15, 0);
     const dorsal = new THREE.Mesh(new THREE.ShapeGeometry(dorsalShape), finMat);
-    dorsal.position.set(-0.42, 0.90, 0);
-    dorsal.rotation.x = 0.15;
+    dorsal.position.set(-0.48, 1.04, 0);
+    dorsal.rotation.x = 0.10;
     group.add(dorsal);
     for (let i = 0; i < 3; i++) {
-      const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.004, 0.34, 6), rayMat);
-      ray.rotation.z = Math.PI / 2 + (i - 1) * 0.12;
-      ray.position.set(-0.47, 0.72 + i * 0.10, 0);
+      const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.004, 0.24, 6), rayMat);
+      ray.rotation.z = Math.PI / 2 + (i - 1) * 0.11;
+      ray.position.set(-0.52, 0.92 + i * 0.08, 0);
       group.add(ray);
     }
 
-    // 臀鳍
+    // 臀鳍（小圆刀形，贴合球体腹部）
     const anal = dorsal.clone();
-    anal.position.set(-0.48, -0.86, 0);
-    anal.rotation.x = -0.15;
+    anal.position.set(-0.54, -1.00, 0);
+    anal.rotation.x = -0.10;
     group.add(anal);
 
-    // 胸鳍（宽短，两侧）
+    // 胸鳍（宽短圆润，两侧）
     const pecShape = new THREE.Shape();
     pecShape.moveTo(0, 0);
-    pecShape.quadraticCurveTo(0.22, 0.14, 0.46, 0.06);
-    pecShape.quadraticCurveTo(0.34, -0.12, 0.12, -0.14);
-    pecShape.quadraticCurveTo(0.02, -0.06, 0, 0);
+    pecShape.quadraticCurveTo(0.18, 0.11, 0.36, 0.05);
+    pecShape.quadraticCurveTo(0.27, -0.10, 0.10, -0.11);
+    pecShape.quadraticCurveTo(0.02, -0.05, 0, 0);
     [-1, 1].forEach(s => {
       const pec = new THREE.Mesh(new THREE.ShapeGeometry(pecShape), finMat);
       pec.position.set(0.38, -0.14, s * 0.92);
@@ -666,9 +667,9 @@ const Pufferfish3D = {
    * InstancedMesh 棘刺（默认贴伏后倾，膨胀时竖起）
    */
   _createSpines(group, species, profile) {
-    const counts = { hystrix: 320, holocanthus: 280, liturosus: 220 };
-    const count = counts[species] || 260;
-    const lenRange = species === 'holocanthus' ? [0.14, 0.24] : [0.14, 0.24];
+    const counts = { hystrix: 130, holocanthus: 110, liturosus: 90 };
+    const count = counts[species] || 130;
+    const lenRange = [0.05, 0.09];
 
     const spineGeo = new THREE.ConeGeometry(0.028, 1, 5);
     const spineMat = new THREE.MeshStandardMaterial({
@@ -711,7 +712,7 @@ const Pufferfish3D = {
       const dir = new THREE.Vector3(x * 0.22, y, z).normalize();
       const pos = new THREE.Vector3(x, y, z);
       const len = (lenRange[0] + Math.random() * (lenRange[1] - lenRange[0])) * (0.6 + 0.4 * belly);
-      data.push({ pos, dir, tilt: 0.55 + Math.random() * 0.25, len });
+      data.push({ pos, dir, tilt: 0.85 + Math.random() * 0.10, len });
       placed++;
     }
 
