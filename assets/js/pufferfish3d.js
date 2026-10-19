@@ -27,18 +27,18 @@
       finColor: 0xd9b98a,
       drawPattern: (ctx, width, height) => {
         const grad = ctx.createLinearGradient(0, 0, 0, height);
-        grad.addColorStop(0, '#bd9868');
-        grad.addColorStop(0.35, '#d9b98a');
-        grad.addColorStop(0.72, '#f2e6d5');
+        grad.addColorStop(0, '#c6a272');
+        grad.addColorStop(0.35, '#e0c094');
+        grad.addColorStop(0.72, '#f5ead8');
         grad.addColorStop(1, '#ffffff');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
         ctx.fillStyle = '#1a110b';
-        for (let i = 0; i < 900; i++) {
+        for (let i = 0; i < 650; i++) {
           const x = Math.random() * width;
           const y = Math.random() * (height * 0.72);
-          const r = 2.5 + Math.random() * 4.5;
+          const r = 2.5 + Math.random() * 4.0;
           ctx.beginPath();
           ctx.arc(x, y, r, 0, Math.PI * 2);
           ctx.fill();
@@ -382,8 +382,8 @@
       bodyMesh.receiveShadow = true;
       inflationGroup.add(bodyMesh);
 
-      // 大眼睛：眼白 + 棕色虹膜渐变 + 大瞳孔 + 高光
-      const eyeRadius = 0.38;
+      // 大眼睛：干净眼白 + 金黄虹膜 + 大瞳孔 + 双高光
+      const eyeRadius = 0.46;
       const eyeGeo = new THREE.SphereGeometry(eyeRadius, 32, 32);
 
       const eyeCanvas = document.createElement('canvas');
@@ -391,31 +391,36 @@
       eyeCanvas.height = 256;
       const ectx = eyeCanvas.getContext('2d');
 
-      ectx.fillStyle = '#f7f7f7';
+      ectx.fillStyle = '#ffffff';
       ectx.fillRect(0, 0, 256, 256);
 
-      const irisGrad = ectx.createRadialGradient(128, 128, 10, 128, 128, 80);
-      irisGrad.addColorStop(0, '#1a0b05');
-      irisGrad.addColorStop(0.5, '#7c431d');
-      irisGrad.addColorStop(0.85, '#a6602b');
-      irisGrad.addColorStop(1, '#1b0e06');
+      // 虹膜：金黄-橙褐渐变，几乎占满眼球，更醒目
+      const irisGrad = ectx.createRadialGradient(128, 128, 12, 128, 128, 106);
+      irisGrad.addColorStop(0, '#3a1c08');
+      irisGrad.addColorStop(0.35, '#9a6428');
+      irisGrad.addColorStop(0.7, '#e0b054');
+      irisGrad.addColorStop(0.9, '#b07a2e');
+      irisGrad.addColorStop(1, '#5a3a16');
       ectx.fillStyle = irisGrad;
       ectx.beginPath();
-      ectx.arc(128, 128, 80, 0, Math.PI * 2);
+      ectx.arc(128, 128, 106, 0, Math.PI * 2);
       ectx.fill();
 
+      // 瞳孔：又大又黑又圆
       ectx.fillStyle = '#050505';
       ectx.beginPath();
-      ectx.arc(128, 128, 48, 0, Math.PI * 2);
+      ectx.arc(128, 128, 62, 0, Math.PI * 2);
       ectx.fill();
 
-      ectx.fillStyle = '#ffffff';
+      // 主高光（左上方，大而亮）
+      ectx.fillStyle = 'rgba(255,255,255,0.95)';
       ectx.beginPath();
-      ectx.arc(152, 104, 16, 0, Math.PI * 2);
+      ectx.arc(170, 94, 24, 0, Math.PI * 2);
       ectx.fill();
-
+      // 次反光（右下方，小而柔）
+      ectx.fillStyle = 'rgba(255,255,255,0.6)';
       ectx.beginPath();
-      ectx.arc(108, 150, 8, 0, Math.PI * 2);
+      ectx.arc(94, 160, 11, 0, Math.PI * 2);
       ectx.fill();
 
       const eyeTexture = new THREE.CanvasTexture(eyeCanvas);
@@ -425,9 +430,9 @@
         metalness: 0.1
       });
 
-      const eyeOffsetX = 1.05;
-      const eyeOffsetY = 0.45;
-      const eyeOffsetZ = 1.55;
+      const eyeOffsetX = 1.12;
+      const eyeOffsetY = 0.54;
+      const eyeOffsetZ = 1.66;
 
       const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
       leftEye.position.set(eyeOffsetX, eyeOffsetY, eyeOffsetZ);
@@ -465,10 +470,10 @@
       mouthGroup.rotation.x = Math.PI * 0.1;
       inflationGroup.add(mouthGroup);
 
-      // 棘刺（仅刺鲀类物种）：贴伏短刺，避开眼睛与口部区域
+      // 棘刺（仅刺鲀类物种）：短小贴伏，避开眼睛与口部区域
       if (specData.hasSpines) {
-        const spineCount = 380;
-        const spineGeo = new THREE.ConeGeometry(0.045, 0.32, 8);
+        const spineCount = 200;
+        const spineGeo = new THREE.ConeGeometry(0.04, 0.26, 8);
         spineGeo.translate(0, 0.16, 0);
         spineGeo.rotateX(Math.PI * 0.5);
 
