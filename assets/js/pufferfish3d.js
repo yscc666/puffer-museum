@@ -294,6 +294,18 @@
     return texture;
   }
 
+  // 卡通渲染三阶渐变图（皮克斯风格分级光影）
+  let _gradientMap = null;
+  function createGradientMap() {
+    if (_gradientMap) return _gradientMap;
+    const data = new Uint8Array([255, 128, 56]);
+    _gradientMap = new THREE.DataTexture(data, 3, 1, THREE.LuminanceFormat);
+    _gradientMap.minFilter = THREE.NearestFilter;
+    _gradientMap.magFilter = THREE.NearestFilter;
+    _gradientMap.needsUpdate = true;
+    return _gradientMap;
+  }
+
   function createScene(container, options = {}) {
     const config = {
       species: options.species || 'hystrix',
@@ -323,17 +335,17 @@
 
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xfffaed, 1.2);
+    const mainLight = new THREE.DirectionalLight(0xfff7e6, 1.6);
     mainLight.position.set(5, 6, 7);
     mainLight.castShadow = true;
     mainLight.shadow.mapSize.width = 1024;
     mainLight.shadow.mapSize.height = 1024;
     scene.add(mainLight);
 
-    const fillLight = new THREE.DirectionalLight(0x73d2de, 0.6);
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.9);
     fillLight.position.set(-5, -3, 4);
     scene.add(fillLight);
 
@@ -367,14 +379,14 @@
 
       const bodyRadius = 2.0;
       const bodyGeo = new THREE.SphereGeometry(bodyRadius, 64, 64);
-      bodyGeo.scale(1.08, 0.98, 1.04);
+      bodyGeo.scale(1.05, 0.96, 1.02);
 
       const bodyTexture = createSpeciesTexture(speciesKey);
-      const bodyMat = new THREE.MeshStandardMaterial({
+      // 卡通渲染（Stylized PBR）：三阶分级光影，干净明亮
+      const bodyMat = new THREE.MeshToonMaterial({
         map: bodyTexture,
-        roughness: 0.45,
-        metalness: 0.05,
-        bumpScale: 0.02
+        gradientMap: createGradientMap(),
+        color: 0xffffff,
       });
 
       bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
@@ -382,8 +394,8 @@
       bodyMesh.receiveShadow = true;
       inflationGroup.add(bodyMesh);
 
-      // 大眼睛：干净眼白 + 金黄虹膜 + 大瞳孔 + 双高光
-      const eyeRadius = 0.46;
+      // Pixar 大眼睛：干净眼白 + 亮橙虹膜 + 大黑瞳（视线微垂显萌）+ 双高光
+      const eyeRadius = 0.50;
       const eyeGeo = new THREE.SphereGeometry(eyeRadius, 32, 32);
 
       const eyeCanvas = document.createElement('canvas');
@@ -394,33 +406,34 @@
       ectx.fillStyle = '#ffffff';
       ectx.fillRect(0, 0, 256, 256);
 
-      // 虹膜：金黄-橙褐渐变，几乎占满眼球，更醒目
-      const irisGrad = ectx.createRadialGradient(128, 128, 12, 128, 128, 106);
+      // 虹膜中心下移（视线微微向下，更萌）
+      const irisCX = 128, irisCY = 138;
+      const irisGrad = ectx.createRadialGradient(irisCX, irisCY, 12, irisCX, irisCY, 108);
       irisGrad.addColorStop(0, '#3a1c08');
-      irisGrad.addColorStop(0.35, '#9a6428');
-      irisGrad.addColorStop(0.7, '#e0b054');
-      irisGrad.addColorStop(0.9, '#b07a2e');
+      irisGrad.addColorStop(0.35, '#c07a2c');
+      irisGrad.addColorStop(0.7, '#f0b429');
+      irisGrad.addColorStop(0.9, '#c98a2e');
       irisGrad.addColorStop(1, '#5a3a16');
       ectx.fillStyle = irisGrad;
       ectx.beginPath();
-      ectx.arc(128, 128, 106, 0, Math.PI * 2);
+      ectx.arc(irisCX, irisCY, 108, 0, Math.PI * 2);
       ectx.fill();
 
       // 瞳孔：又大又黑又圆
       ectx.fillStyle = '#050505';
       ectx.beginPath();
-      ectx.arc(128, 128, 62, 0, Math.PI * 2);
+      ectx.arc(irisCX, irisCY, 66, 0, Math.PI * 2);
       ectx.fill();
 
-      // 主高光（左上方，大而亮）
-      ectx.fillStyle = 'rgba(255,255,255,0.95)';
+      // 主高光（左上方，大而亮，Pixar 招牌）
+      ectx.fillStyle = 'rgba(255,255,255,0.98)';
       ectx.beginPath();
-      ectx.arc(170, 94, 24, 0, Math.PI * 2);
+      ectx.arc(180, 86, 26, 0, Math.PI * 2);
       ectx.fill();
-      // 次反光（右下方，小而柔）
-      ectx.fillStyle = 'rgba(255,255,255,0.6)';
+      // 次高光（瞳孔下方，小圆点）
+      ectx.fillStyle = 'rgba(255,255,255,0.85)';
       ectx.beginPath();
-      ectx.arc(94, 160, 11, 0, Math.PI * 2);
+      ectx.arc(94, 150, 12, 0, Math.PI * 2);
       ectx.fill();
 
       const eyeTexture = new THREE.CanvasTexture(eyeCanvas);
@@ -430,9 +443,9 @@
         metalness: 0.1
       });
 
-      const eyeOffsetX = 1.12;
-      const eyeOffsetY = 0.54;
-      const eyeOffsetZ = 1.66;
+      const eyeOffsetX = 1.15;
+      const eyeOffsetY = 0.56;
+      const eyeOffsetZ = 1.70;
 
       const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
       leftEye.position.set(eyeOffsetX, eyeOffsetY, eyeOffsetZ);
@@ -447,40 +460,62 @@
       inflationGroup.add(leftEye);
       inflationGroup.add(rightEye);
 
-      // 嘴：白色板状齿 + 内口
+      // 微笑嘟嘟嘴：半环白色板齿（开口朝上，呈微笑弧线）
       const mouthGroup = new THREE.Group();
-      const beakGeo = new THREE.TorusGeometry(0.24, 0.08, 16, 32);
+      const beakGeo = new THREE.TorusGeometry(0.26, 0.09, 16, 24, Math.PI);
       const beakMat = new THREE.MeshStandardMaterial({
-        color: 0xf2f2eb,
+        color: 0xfff8ee,
         roughness: 0.3,
-        metalness: 0.1
+        metalness: 0.05
       });
       const beakMesh = new THREE.Mesh(beakGeo, beakMat);
-      beakMesh.scale.set(1.1, 0.7, 1.0);
+      beakMesh.scale.set(1.05, 0.8, 1.0);
+      beakMesh.rotation.z = Math.PI; // 半环翻转为开口朝上的微笑弧线
+      beakMesh.rotation.x = -Math.PI * 0.5;
 
+      // 内口：扁椭圆深色开口，在嘴下方
       const innerMouthGeo = new THREE.CircleGeometry(0.2, 32);
-      const innerMouthMat = new THREE.MeshBasicMaterial({ color: 0x110505 });
+      innerMouthGeo.scale(1, 0.55, 1);
+      const innerMouthMat = new THREE.MeshBasicMaterial({ color: 0x2a0d0a, side: THREE.DoubleSide });
       const innerMouthMesh = new THREE.Mesh(innerMouthGeo, innerMouthMat);
-      innerMouthMesh.position.z = -0.02;
+      innerMouthMesh.position.set(0, -0.30, 0.0);
+      innerMouthMesh.rotation.x = -Math.PI * 0.5;
 
       mouthGroup.add(beakMesh);
       mouthGroup.add(innerMouthMesh);
 
-      mouthGroup.position.set(0, -0.35, 1.98);
-      mouthGroup.rotation.x = Math.PI * 0.1;
+      mouthGroup.position.set(0, -0.42, 1.98);
+      mouthGroup.rotation.x = Math.PI * 0.06;
       inflationGroup.add(mouthGroup);
 
-      // 棘刺（仅刺鲀类物种）：短小贴伏，避开眼睛与口部区域
+      // 腮红：脸颊两侧淡粉圆点，萌感加成
+      const blushMat = new THREE.MeshBasicMaterial({
+        color: 0xffa3b5,
+        transparent: true,
+        opacity: 0.38,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      const blushGeo = new THREE.CircleGeometry(0.20, 24);
+      [-1, 1].forEach(s => {
+        const blush = new THREE.Mesh(blushGeo, blushMat);
+        blush.position.set(0.86, -0.22, s * 1.72);
+        const bN = new THREE.Vector3(0.86, -0.22, s * 1.72).normalize();
+        blush.lookAt(blush.position.clone().add(bN));
+        inflationGroup.add(blush);
+      });
+
+      // 软刺（仅刺鲀类物种）：圆头小软刺，卡通质感，避免生硬与密恐
       if (specData.hasSpines) {
-        const spineCount = 200;
-        const spineGeo = new THREE.ConeGeometry(0.04, 0.26, 8);
-        spineGeo.translate(0, 0.16, 0);
-        spineGeo.rotateX(Math.PI * 0.5);
+        const spineCount = 170;
+        const spineGeo = new THREE.SphereGeometry(0.052, 10, 8);
+        spineGeo.scale(1, 1.45, 1);
+        spineGeo.translate(0, 0.055, 0);
 
         const spineMat = new THREE.MeshStandardMaterial({
-          color: specData.spineColor,
-          roughness: 0.5,
-          metalness: 0.05
+          color: 0xfff3e6,
+          roughness: 0.55,
+          metalness: 0.02
         });
 
         spineInstancedMesh = new THREE.InstancedMesh(spineGeo, spineMat, spineCount);
@@ -504,7 +539,8 @@
           dummy.position.copy(pos);
           const normal = pos.clone().normalize();
           dummy.lookAt(pos.clone().add(normal));
-          dummy.rotateX(Math.PI * 0.15);
+          // 软刺拉长轴（+y）转向外法向，并略微贴伏
+          dummy.rotateX(-Math.PI / 2 + 0.18);
 
           dummy.updateMatrix();
           spineInstancedMesh.setMatrixAt(count++, dummy.matrix);
