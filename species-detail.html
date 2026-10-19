@@ -201,12 +201,20 @@
             <div class="species-detail-section">
               <h2>3D标本</h2>
               <p style="margin-bottom: 1rem;">可交互 3D 模型，旋转缩放查看形态细节。</p>
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <a href="viewer.html?species=${species.id}" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.7rem 1.3rem;">
+                沉浸式 3D 查看
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
               <a href="specimen.html#card-${species.id}" class="btn btn-outline" style="background: #fff; color: var(--sea-blue); border-color: var(--sea-blue); font-size: 0.85rem; padding: 0.7rem 1.3rem;">
                 查看 3D 标本
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </a>
+              </div>
             </div>
           </div>
         </div>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>沉浸式 3D 查看 | 刺豚数字博物馆</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; background: #020409; }
+    body { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    /* 深海背景 + 动态光斑 */
+    #webgl-container {
+      position: fixed; inset: 0; z-index: 1;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(14,165,233,.10) 0%, transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(56,189,248,.05) 0%, transparent 60%),
+        radial-gradient(circle at 50% 20%, #0d2347 0%, #060b18 70%, #020409 100%);
+    }
+    #webgl-container::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 50% 20%, rgba(14,165,233,.06) 0%, transparent 50%);
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0%   { opacity: 0.5; transform: scale(1); }
+      100% { opacity: 1;   transform: scale(1.05); }
+    }
+
+    /* 玻璃面板 */
+    .glass-panel {
+      background: rgba(13, 20, 38, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+
+    /* 顶部返回条（置于导航栏下方） */
+    .viewer-top {
+      position: fixed; top: 5.5rem; left: 1rem; right: 1rem; z-index: 10;
+      display: flex; justify-content: space-between; align-items: center;
+      pointer-events: none;
+    }
+    .viewer-top > * { pointer-events: auto; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: #7dd3fc; font-size: 0.85rem; text-decoration: none;
+      padding: 0.5rem 1rem; border-radius: 12px;
+      background: rgba(13,20,38,0.72); border: 1px solid rgba(56,189,248,0.15);
+      transition: all 0.25s ease;
+    }
+    .back-link:hover { box-shadow: 0 0 15px rgba(56,189,248,0.4); transform: translateY(-1px); }
+    .viewer-hint {
+      color: #94a3b8; font-size: 0.75rem; padding: 0.5rem 0.9rem; border-radius: 10px;
+      background: rgba(13,20,38,0.6); border: 1px solid rgba(255,255,255,0.08);
+      display: none; align-items: center; gap: 0.6rem;
+    }
+    @media (min-width: 768px) { .viewer-hint { display: flex; } }
+
+    /* 右侧控制面板 */
+    .viewer-panel {
+      position: fixed; top: 5rem; right: 1rem; bottom: 6.5rem; z-index: 10;
+      width: 300px; max-width: calc(100vw - 2rem);
+      padding: 1.1rem; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .viewer-panel label {
+      display: block; font-size: 0.72rem; font-weight: 600;
+      color: #38bdf8; text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 0.45rem;
+    }
+    .viewer-panel select {
+      width: 100%; background: rgba(15,23,42,0.95); color: #f1f5f9;
+      border: 1px solid rgba(71,85,105,0.8); border-radius: 10px;
+      padding: 0.55rem 0.7rem; font-size: 0.85rem; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .viewer-panel select:focus { border-color: #38bdf8; }
+    .panel-sep { border-top: 1px solid rgba(51,65,85,0.6); padding-top: 0.9rem; }
+    .slider-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .slider-head .val { font-family: monospace; font-size: 0.8rem; color: #38bdf8; background: rgba(8,47,73,0.6); padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid rgba(56,189,248,0.25); }
+    input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(30,41,59,0.85); border-radius: 9999px; outline: none; }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: #38bdf8; cursor: pointer; box-shadow: 0 0 12px rgba(56,189,248,0.8);
+      transition: transform 0.2s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+    .btn-row { display: flex; gap: 0.5rem; }
+    .ctrl-btn {
+      flex: 1; padding: 0.6rem 0.5rem; font-size: 0.8rem; border-radius: 10px;
+      background: rgba(30,41,59,0.9); color: #e2e8f0; border: 1px solid rgba(71,85,105,0.7);
+      cursor: pointer; transition: all 0.25s ease; text-align: center;
+    }
+    .ctrl-btn:hover { box-shadow: 0 0 15px rgba(56,189,248,0.35); transform: translateY(-1px); }
+    .ctrl-btn.primary { background: linear-gradient(135deg, #0891b2, #2563eb); color: #fff; border-color: transparent; font-weight: 600; }
+
+    /* 底部物种信息条 */
+    .viewer-info {
+      position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 10;
+      padding: 0.9rem 1.1rem;
+      display: flex; align-items: center; gap: 1.1rem;
+    }
+    .info-main { flex: 1; min-width: 0; }
+    .info-title { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+    .info-name { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .info-sci { font-size: 0.8rem; font-style: italic; color: #7dd3fc; }
+    .info-eng { font-size: 0.72rem; color: #94a3b8; }
+    .info-desc {
+      margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .info-meta { display: flex; gap: 1rem; font-size: 0.72rem; color: #94a3b8; flex-shrink: 0; }
+    .info-meta b { color: #f1f5f9; display: block; font-size: 0.8rem; }
+    @media (max-width: 900px) {
+      .viewer-panel { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 42vh; border-radius: 16px 16px 0 0; }
+      .viewer-info { bottom: auto; top: 5.5rem; left: 1rem; right: 1rem; flex-direction: column; align-items: flex-start; }
+      .info-meta { display: none; }
+      .viewer-top { top: 4.5rem; }
+    }
+
+    /* 覆盖导航栏配色适配全屏 */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="viewer-top">
+    <a href="specimen.html" class="back-link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      返回 3D 标本馆
+    </a>
+    <div class="viewer-hint">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      拖拽旋转 · 滚轮缩放
+    </div>
+  </div>
+
+  <aside class="viewer-panel glass-panel">
+    <div>
+      <label>物种切换</label>
+      <select id="speciesSelect"></select>
+    </div>
+
+    <div class="panel-sep">
+      <div class="slider-head">
+        <label style="margin:0;">膨胀控制</label>
+        <span class="val" id="inflateValue">100%</span>
+      </div>
+      <input type="range" id="inflateSlider" min="0" max="1" step="0.01" value="1">
+      <div class="btn-row" style="margin-top:0.7rem;">
+        <button class="ctrl-btn" id="btnDeflate">放气</button>
+        <button class="ctrl-btn primary" id="btnInflate">完全膨胀</button>
+      </div>
+    </div>
+
+    <div class="panel-sep">
+      <label>视角控制</label>
+      <div class="btn-row">
+        <button class="ctrl-btn" id="btnAutoRotate">暂停旋转</button>
+        <button class="ctrl-btn" id="btnResetView">重置视角</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="viewer-info glass-panel">
+    <div class="info-main">
+      <div class="info-title">
+        <span class="info-name" id="infoName">密斑刺鲀</span>
+        <span class="info-sci" id="infoSci">Diodon hystrix</span>
+        <span class="info-eng" id="infoEng">Spot-fin porcupinefish</span>
+      </div>
+      <p class="info-desc" id="infoDesc"></p>
+    </div>
+    <div class="info-meta">
+      <div>最大体长<b id="infoLength">91 cm</b></div>
+      <div>栖息环境<b id="infoHabitat">浅海内湾</b></div>
+      <div>保护等级<b id="infoConservation">IUCN LC</b></div>
+    </div>
+  </div>
+
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/pufferfish3d.js"></script>
+  <script src="assets/js/species-data.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    MuseumUI.renderNavbar('specimen');
+    MuseumUI.renderFooter();
+
+    const speciesSelect = document.getElementById('speciesSelect');
+    const inflateSlider = document.getElementById('inflateSlider');
+    const inflateValue = document.getElementById('inflateValue');
+    const btnDeflate = document.getElementById('btnDeflate');
+    const btnInflate = document.getElementById('btnInflate');
+    const btnAutoRotate = document.getElementById('btnAutoRotate');
+    const btnResetView = document.getElementById('btnResetView');
+
+    // 物种下拉
+    SPECIES_DATA.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name + ' · ' + s.sciName;
+      speciesSelect.appendChild(opt);
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const initialSpecies = params.get('species') && SPECIES_DATA.some(s => s.id === params.get('species'))
+      ? params.get('species') : 'hystrix';
+    speciesSelect.value = initialSpecies;
+
+    function updateInfo(id) {
+      const s = SPECIES_DATA.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('infoName').textContent = s.name;
+      document.getElementById('infoSci').textContent = s.sciName;
+      document.getElementById('infoEng').textContent = s.english || '';
+      document.getElementById('infoLength').textContent = s.maxLength;
+      document.getElementById('infoHabitat').textContent = (s.habitat || '').split('，')[0] || '海洋';
+      document.getElementById('infoConservation').textContent = 'IUCN ' + (s.conservation || '—');
+      document.getElementById('infoDesc').textContent = (s.morphology || s.behavior || '').slice(0, 120) + '…';
+      document.title = s.name + ' | 刺豚数字博物馆';
+    }
+
+    window.addEventListener('load', () => {
+      const container = document.getElementById('webgl-container');
+      const ctrl = Pufferfish3D.createScene(container, {
+        species: initialSpecies,
+        autoRotate: true,
+        rotateSpeed: 1.0,
+        interactive: true
+      });
+      updateInfo(initialSpecies);
+
+      speciesSelect.addEventListener('change', e => {
+        ctrl.changeSpecies(e.target.value);
+        updateInfo(e.target.value);
+      });
+      inflateSlider.addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        ctrl.inflate(v);
+        inflateValue.textContent = Math.round(v * 100) + '%';
+      });
+      btnDeflate.addEventListener('click', () => {
+        inflateSlider.value = 0.2; ctrl.inflate(0.2); inflateValue.textContent = '20%';
+      });
+      btnInflate.addEventListener('click', () => {
+        inflateSlider.value = 1; ctrl.inflate(1); inflateValue.textContent = '100%';
+      });
+      btnAutoRotate.addEventListener('click', () => {
+        const on = ctrl.toggleAutoRotate();
+        btnAutoRotate.textContent = on ? '暂停旋转' : '继续旋转';
+      });
+      btnResetView.addEventListener('click', () => ctrl.resetView());
+    });
+  </script>
+</body>
+</html>
