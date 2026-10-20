@@ -4,239 +4,312 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>密斑刺豚 · Diodon hystrix | 数字标本馆</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='38' fill='%231f3a2e'/%3E%3Ccircle cx='38' cy='45' r='4' fill='%23e8d9b8'/%3E%3Ccircle cx='62' cy='45' r='4' fill='%23e8d9b8'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%230a1628'/%3E%3Ccircle cx='50' cy='50' r='18' fill='none' stroke='%2338bdf8' stroke-width='2'/%3E%3C/svg%3E">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
+  @import url('https://miaoda.feishu.cn/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
   :root{
-    --ink:#1a1f1c;
-    --ink-soft:#5a6660;
-    --paper:#f4efe4;
-    --paper-dark:#e8e0cd;
-    --museum:#1f3a2e;
-    --museum-deep:#142a20;
-    --brass:#b08d4f;
-    --brass-light:#d4b57a;
-    --line:#c9bfa5;
+    --bg:#060b16;
+    --bg-2:#0b1222;
+    --glass:rgba(255,255,255,.04);
+    --glass-border:rgba(255,255,255,.08);
+    --text:#e8eef7;
+    --text-dim:#8a9bb4;
+    --accent:#38bdf8;
+    --accent-2:#818cf8;
+    --gold:#d4a857;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--paper);color:var(--ink);font-family:"Noto Serif SC","Songti SC","SimSun",serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-  body{min-height:100vh}
-
-  /* 顶部馆名 */
-  .masthead{
-    background:var(--museum-deep);color:var(--paper);
-    padding:18px 40px;display:flex;justify-content:space-between;align-items:center;
-    border-bottom:3px double var(--brass);
-  }
-  .masthead .brand{font-size:14px;letter-spacing:.3em;font-weight:600}
-  .masthead .brand em{color:var(--brass-light);font-style:normal}
-  .masthead .dept{font-size:11px;letter-spacing:.2em;color:#9ab0a3}
-
-  /* 主体布局 */
-  .exhibit{
-    display:grid;grid-template-columns:minmax(280px,380px) 1fr;
-    min-height:calc(100vh - 60px);
-  }
-
-  /* 左侧标本档案 */
-  .archive{
-    padding:48px 40px;border-right:1px solid var(--line);
-    background:var(--paper);
-  }
-  .archive .cat{
-    font-size:11px;letter-spacing:.3em;color:var(--brass);
-    text-transform:uppercase;margin-bottom:14px;
-  }
-  .archive h1{
-    font-size:32px;line-height:1.2;font-weight:700;
-    color:var(--museum-deep);margin-bottom:6px;
-  }
-  .latin{
-    font-style:italic;color:var(--ink-soft);font-size:15px;
-    margin-bottom:28px;font-family:"Georgia","Times New Roman",serif;
-  }
-  .taxonomy{
-    border-top:1px solid var(--line);
-  }
-  .tax-row{
-    display:grid;grid-template-columns:90px 1fr;
-    padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;
-  }
-  .tax-row .k{color:var(--ink-soft);letter-spacing:.08em}
-  .tax-row .v{color:var(--ink)}
-  .desc{
-    margin-top:28px;font-size:13.5px;color:var(--ink-soft);line-height:1.8;
-  }
-  .desc strong{color:var(--museum-deep)}
-
-  /* 右侧展示台 */
-  .stage{
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Inter','PingFang SC',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
     position:relative;
-    background:
-      radial-gradient(ellipse at 50% 60%, #2a4a3a 0%, #142a20 70%, #0e1f18 100%);
-    overflow:hidden;
   }
-  /* 展柜玻璃反光 */
-  .stage::before{
-    content:"";position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,transparent 40%);
-    z-index:2;
+
+  /* ===== 背景光斑 ===== */
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;z-index:0;pointer-events:none}
+  .orb-1{width:500px;height:500px;background:#1e40af;top:-10%;left:-10%;animation:float1 18s ease-in-out infinite}
+  .orb-2{width:400px;height:400px;background:#0ea5e9;bottom:-15%;right:-5%;animation:float2 22s ease-in-out infinite}
+  .orb-3{width:300px;height:300px;background:#6366f1;top:40%;left:50%;animation:float3 25s ease-in-out infinite}
+  @keyframes float1{50%{transform:translate(80px,60px) scale(1.1)}}
+  @keyframes float2{50%{transform:translate(-60px,-40px) scale(.95)}}
+  @keyframes float3{50%{transform:translate(-100px,40px) scale(1.05)}}
+
+  /* 网格底纹 */
+  .grid-overlay{
+    position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(56,189,248,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(56,189,248,.04) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
   }
+
+  /* ===== 顶部导航 ===== */
+  nav{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);
+    z-index:10;display:flex;align-items:center;gap:24px;
+    padding:12px 24px;border-radius:999px;
+    background:rgba(11,18,34,.6);backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    font-size:13px;letter-spacing:.05em;
+  }
+  nav .logo{font-weight:600;color:var(--text)}
+  nav .logo span{background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  nav .sep{width:1px;height:14px;background:var(--glass-border)}
+  nav .nav-item{color:var(--text-dim);cursor:pointer;transition:color .2s}
+  nav .nav-item:hover{color:var(--text)}
+
+  /* ===== 主舞台 ===== */
+  .stage{position:relative;width:100%;height:100vh;z-index:1}
   model-viewer{
-    width:100%;height:640px;
-    --poster-color:#1a3328;
-    background:#1a3328;
+    width:100%;height:100%;
+    --poster-color:transparent;
   }
-  .mv-loading{
-    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    z-index:4;color:#d4c9a8;font-size:13px;letter-spacing:.2em;
-    pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:14px;
+
+  /* 加载动画 */
+  .loader{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    z-index:5;display:flex;flex-direction:column;align-items:center;gap:16px;
   }
-  .mv-loading .spinner{
-    width:36px;height:36px;border:2px solid rgba(212,181,122,.25);
-    border-top-color:#d4b57a;border-radius:50%;animation:spin 1s linear infinite;
+  .loader .ring{
+    width:48px;height:48px;border-radius:50%;
+    border:2px solid rgba(56,189,248,.15);border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
   }
+  .loader .txt{font-size:12px;color:var(--text-dim);letter-spacing:.2em}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .loader.hide{display:none}
 
-  /* 角标信息 */
-  .stage-tag{
-    position:absolute;left:32px;top:28px;z-index:3;
-    color:#c8d4cb;font-size:11px;letter-spacing:.25em;
+  /* ===== 左侧标题区 ===== */
+  .hero{
+    position:absolute;left:48px;top:50%;transform:translateY(-50%);
+    z-index:4;max-width:440px;pointer-events:none;
+    animation:fadeUp 1.2s cubic-bezier(.2,.8,.2,1) .3s both;
   }
-  .stage-tag b{color:var(--brass-light);font-weight:600}
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11px;letter-spacing:.3em;color:var(--accent);
+    text-transform:uppercase;margin-bottom:20px;
+  }
+  .hero .eyebrow::before{content:"";width:24px;height:1px;background:var(--accent)}
+  .hero h1{
+    font-family:'Noto Serif SC',serif;
+    font-size:clamp(42px,5.5vw,72px);
+    line-height:1.05;font-weight:700;letter-spacing:-.02em;
+    margin-bottom:8px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(135deg,#fff 0%,#38bdf8 50%,#818cf8 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero .latin{
+    font-style:italic;color:var(--text-dim);font-size:15px;
+    font-family:Georgia,serif;margin-bottom:28px;letter-spacing:.02em;
+  }
+  .hero .desc{
+    font-size:14px;color:var(--text-dim);line-height:1.8;
+    margin-bottom:32px;pointer-events:auto;
+  }
 
-  /* 控制按钮 */
+  /* 数据点 */
+  .stats{display:flex;gap:0;pointer-events:auto}
+  .stat{padding:0 24px;border-left:1px solid var(--glass-border)}
+  .stat:first-child{padding-left:0;border-left:0}
+  .stat .num{
+    font-size:24px;font-weight:600;
+    background:linear-gradient(135deg,var(--text),var(--accent));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .stat .lbl{font-size:11px;color:var(--text-dim);letter-spacing:.1em;margin-top:4px}
+
+  /* ===== 右侧浮动信息卡 ===== */
+  .spec-card{
+    position:absolute;right:48px;top:50%;transform:translateY(-50%);
+    z-index:4;width:300px;
+    background:var(--glass);backdrop-filter:blur(24px);
+    border:1px solid var(--glass-border);border-radius:20px;
+    padding:28px;
+    animation:fadeUp 1.2s cubic-bezier(.2,.8,.2,1) .5s both;
+  }
+  .spec-card .tag{
+    font-size:10px;letter-spacing:.25em;color:var(--gold);
+    text-transform:uppercase;margin-bottom:16px;
+  }
+  .spec-card h3{font-size:18px;font-weight:600;margin-bottom:18px;font-family:'Noto Serif SC',serif}
+  .spec-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;
+  }
+  .spec-row:last-child{border-bottom:0}
+  .spec-row .k{color:var(--text-dim)}
+  .spec-row .v{color:var(--text);font-weight:500;text-align:right}
+
+  /* ===== 控制按钮 ===== */
   .controls{
-    position:absolute;right:24px;top:24px;z-index:3;
-    display:flex;flex-direction:column;gap:10px;
+    position:absolute;right:48px;bottom:48px;z-index:5;
+    display:flex;gap:10px;
   }
-  .ctrl-btn{
-    width:44px;height:44px;border-radius:50%;
-    background:rgba(244,239,228,.92);border:1px solid var(--brass);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;
-    transition:all .2s;color:var(--museum-deep);
+  .cbtn{
+    width:46px;height:46px;border-radius:50%;
+    background:var(--glass);backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;color:var(--text);transition:all .25s;
   }
-  .ctrl-btn:hover{background:var(--brass-light)}
-  .ctrl-btn.active{background:var(--brass);color:#fff;border-color:var(--brass)}
-  .ctrl-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .cbtn:hover{background:rgba(56,189,248,.15);border-color:var(--accent);color:var(--accent)}
+  .cbtn.active{background:rgba(56,189,248,.2);border-color:var(--accent);color:var(--accent)}
+  .cbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-  /* 操作提示 */
+  /* 底部提示 */
   .hint{
-    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;
-    background:rgba(20,42,32,.85);backdrop-filter:blur(8px);
-    border:1px solid var(--brass);border-radius:2px;
-    padding:9px 20px;font-size:12px;color:#d4c9a8;letter-spacing:.12em;
-    pointer-events:none;white-space:nowrap;
+    position:absolute;bottom:48px;left:50%;transform:translateX(-50%);
+    z-index:5;display:flex;align-items:center;gap:8px;
+    font-size:11px;color:var(--text-dim);letter-spacing:.15em;
+    padding:8px 16px;border-radius:999px;
+    background:var(--glass);backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+  }
+  .hint svg{width:12px;height:12px;stroke:var(--accent);fill:none;stroke-width:2}
+
+  /* 角标 */
+  .corner{
+    position:absolute;font-size:10px;letter-spacing:.25em;color:var(--text-dim);
+    z-index:4;text-transform:uppercase;
+  }
+  .corner-tl{top:80px;left:48px}
+  .corner-br{bottom:24px;right:48px}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(30px)}
+    to{opacity:1;transform:translateY(0)}
   }
 
-  /* 底部 */
-  .colophon{
-    background:var(--museum-deep);color:#8aa093;
-    padding:16px 40px;font-size:11px;letter-spacing:.1em;
-    display:flex;justify-content:space-between;border-top:1px solid var(--brass);
-  }
-
-  /* 响应式 */
-  @media (max-width: 900px){
-    .masthead{padding:14px 20px}
-    .exhibit{grid-template-columns:1fr;min-height:auto}
-    .archive{padding:32px 22px;border-right:0;border-bottom:1px solid var(--line)}
-    .archive h1{font-size:26px}
-    .stage{min-height:60vh}
-    model-viewer{height:60vh;min-height:380px}
-    .colophon{flex-direction:column;gap:6px;padding:14px 20px}
+  /* ===== 响应式 ===== */
+  @media (max-width:900px){
+    nav{top:12px;gap:14px;padding:10px 18px;font-size:12px;max-width:calc(100vw - 24px)}
+    nav .nav-item{display:none}
+    .hero{left:20px;right:20px;top:auto;bottom:180px;transform:none;max-width:none}
+    .hero h1{font-size:34px}
+    .hero .desc{display:none}
+    .stats{gap:16px}
+    .stat{padding:0 16px}
+    .stat:first-child{padding-left:0}
+    .spec-card{display:none}
+    .corner-tl{display:none}
+    .controls{right:20px;bottom:110px}
+    .hint{bottom:24px}
+    .corner-br{display:none}
   }
 </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="brand">数字标本馆 <em>·</em> DIGITAL SPECIMEN</div>
-  <div class="dept">海洋鱼类展区 / MARINE FISH</div>
-</header>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="grid-overlay"></div>
 
-<main class="exhibit">
-  <aside class="archive">
-    <div class="cat">Specimen No. DI-001</div>
-    <h1>密斑刺豚</h1>
-    <div class="latin">Diodon hystrix (Linnaeus, 1758)</div>
+<nav>
+  <div class="logo"><span>DIGITAL</span> SPECIMEN</div>
+  <div class="sep"></div>
+  <div class="nav-item">标本馆</div>
+  <div class="nav-item">物种百科</div>
+  <div class="nav-item">数据库</div>
+  <div class="nav-item">关于</div>
+</nav>
 
-    <div class="taxonomy">
-      <div class="tax-row"><div class="k">门</div><div class="v">Chordata 脊索动物门</div></div>
-      <div class="tax-row"><div class="k">纲</div><div class="v">Actinopterygii 辐鳍鱼纲</div></div>
-      <div class="tax-row"><div class="k">目</div><div class="v">Tetraodontiformes 鲀形目</div></div>
-      <div class="tax-row"><div class="k">科</div><div class="v">Diodontidae 刺鲀科</div></div>
-      <div class="tax-row"><div class="k">属</div><div class="v">Diodon 刺鲀属</div></div>
-      <div class="tax-row"><div class="k">体型</div><div class="v">成体可达 60 cm</div></div>
-      <div class="tax-row"><div class="k">分布</div><div class="v">全球热带海域浅海</div></div>
-      <div class="tax-row"><div class="k">模型面数</div><div class="v">约 11.6 万三角面</div></div>
-    </div>
+<div class="corner corner-tl">DIGITAL 3D / REALTIME WEBGL</div>
+<div class="corner corner-br">EST. 2026 · MARINE BIOLOGY</div>
 
+<main class="stage">
+  <div class="loader" id="loader">
+    <div class="ring"></div>
+    <div class="txt">LOADING SPECIMEN</div>
+  </div>
+
+  <model-viewer
+    id="fish"
+    src="assets/ci_tun_slim.glb"
+    alt="密斑刺豚三维模型"
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    auto-rotate-delay="2000"
+    rotation-per-second="12deg"
+    shadow-intensity="1.5"
+    shadow-softness="2"
+    exposure="1.15"
+    environment-image="neutral"
+    interaction-prompt="none">
+  </model-viewer>
+
+  <!-- 左侧标题 -->
+  <section class="hero">
+    <div class="eyebrow">Flagship Species</div>
+    <h1><span class="grad">密斑刺豚</span></h1>
+    <div class="latin">Diodon hystrix · Linnaeus, 1758</div>
     <p class="desc">
-      <strong>密斑刺鲀</strong>受扰时会吞水使身体膨胀成球，体表硬刺随之竖起。
-      本模型由摄影测量与 AI 重建生成，用于线上科普展示；<strong>不用于科研测量</strong>。
+      遇敌时吞水膨胀成球，全身棘刺竖起。本模型由摄影测量重建，用于线上科普展示。
     </p>
+    <div class="stats">
+      <div class="stat"><div class="num">91cm</div><div class="lbl">最大体长</div></div>
+      <div class="stat"><div class="num">50m</div><div class="lbl">栖息深度</div></div>
+      <div class="stat"><div class="num">116K</div><div class="lbl">三角面</div></div>
+    </div>
+  </section>
+
+  <!-- 右侧规格卡 -->
+  <aside class="spec-card">
+    <div class="tag">Specimen No. DI-001</div>
+    <h3>分类档案</h3>
+    <div class="spec-row"><span class="k">门</span><span class="v">Chordata 脊索动物门</span></div>
+    <div class="spec-row"><span class="k">纲</span><span class="v">Actinopterygii 辐鳍鱼纲</span></div>
+    <div class="spec-row"><span class="k">目</span><span class="v">Tetraodontiformes 鲀形目</span></div>
+    <div class="spec-row"><span class="k">科</span><span class="v">Diodontidae 刺鲀科</span></div>
+    <div class="spec-row"><span class="k">属</span><span class="v">Diodon 刺鲀属</span></div>
+    <div class="spec-row"><span class="k">保护等级</span><span class="v" style="color:#4ade80">IUCN 无危</span></div>
   </aside>
 
-  <section class="stage">
-    <div class="stage-tag">DIGITAL 3D SCAN · <b>REALTIME WEBGL</b></div>
+  <!-- 控制按钮 -->
+  <div class="controls">
+    <button class="cbtn active" id="btnRotate" title="自动旋转" aria-label="自动旋转">
+      <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+    </button>
+    <button class="cbtn" id="btnReset" title="复位视角" aria-label="复位视角">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+    </button>
+  </div>
 
-    <div class="mv-loading" id="mvLoading">
-      <div class="spinner"></div>
-      <div>模型加载中…</div>
-    </div>
-
-    <model-viewer
-      id="fish"
-      src="assets/ci_tun_slim.glb"
-      alt="密斑刺豚三维模型"
-      camera-controls
-      touch-action="pan-y"
-      auto-rotate
-      auto-rotate-delay="2000"
-      rotation-per-second="15deg"
-      shadow-intensity="1.2"
-      shadow-softness="1.5"
-      exposure="1.1"
-      environment-image="neutral"
-      interaction-prompt="auto">
-    </model-viewer>
-
-    <div class="controls">
-      <button class="ctrl-btn active" id="btn-rotate" title="自动旋转" aria-label="切换自动旋转">
-        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
-      </button>
-      <button class="ctrl-btn" id="btn-reset" title="复位视角" aria-label="复位视角">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
-      </button>
-    </div>
-
-    <div class="hint">拖拽旋转 · 滚轮缩放</div>
-  </section>
+  <div class="hint">
+    <svg viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+    拖拽旋转 · 滚轮缩放
+  </div>
 </main>
-
-<footer class="colophon">
-  <div>Digital Specimen Gallery · 密斑刺豚数字标本</div>
-  <div>Model: 116K tris / GLB · WebGL</div>
-</footer>
 
 <script>
   const mv = document.getElementById('fish');
-  const btnRotate = document.getElementById('btn-rotate');
-  const btnReset = document.getElementById('btn-reset');
+  const loader = document.getElementById('loader');
+  const btnRotate = document.getElementById('btnRotate');
+  const btnReset = document.getElementById('btnReset');
+
+  mv.addEventListener('load', () => loader.classList.add('hide'));
+  mv.addEventListener('error', () => {
+    loader.innerHTML = '<div class="txt" style="color:#f87171">加载失败 · 请刷新</div>';
+  });
+
   btnRotate.addEventListener('click', () => {
     const on = mv.autoRotate;
     mv.autoRotate = !on;
     btnRotate.classList.toggle('active', !on);
   });
+
   btnReset.addEventListener('click', () => {
     mv.cameraOrbit = '0deg 75deg 105%';
     mv.jumpCameraToGoal();
-  });
-  const loading = document.getElementById('mvLoading');
-  mv.addEventListener('load', () => { loading.style.display = 'none'; });
-  mv.addEventListener('error', () => {
-    loading.innerHTML = '<div style="color:#e8a0a0">模型加载失败，请刷新重试</div>';
   });
 </script>
 
